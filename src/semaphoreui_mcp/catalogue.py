@@ -1,4 +1,4 @@
-"""Compile the pinned upstream API into stable, validated MCP operations."""
+"""Compile the bundled upstream API into stable, validated MCP operations."""
 
 from __future__ import annotations
 

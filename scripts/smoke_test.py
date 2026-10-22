@@ -1,6 +1,7 @@
 """Opt-in integration test using a disposable Semaphore Docker container.
 
 Run: uv run python scripts/smoke_test.py --docker
+Select another release with --image semaphoreui/semaphore:<tag>.
 Only a new container is modified. Its Ansible task targets localhost inside it.
 """
 
@@ -180,6 +181,11 @@ def main() -> None:
     action="store_true",
     help="Explicitly start, exercise, and remove a new disposable Semaphore container",
   )
+  parser.add_argument(
+    "--image",
+    default=IMAGE,
+    help=f"Semaphore image to exercise (default: {IMAGE})",
+  )
   args = parser.parse_args()
   if not args.docker:
     parser.error("Pass --docker to opt in to creating the disposable test container")
@@ -206,7 +212,7 @@ def main() -> None:
       "SEMAPHORE_ADMIN_NAME=Smoke",
       "--env",
       "SEMAPHORE_ADMIN_EMAIL=smoke@localhost",
-      IMAGE,
+      args.image,
       environment=environment,
     )
     address = docker("port", container, "3000/tcp")
@@ -218,7 +224,7 @@ def main() -> None:
       (repository / "smoke.yml").write_text(PLAYBOOK)
       docker("cp", str(repository), f"{container}:/tmp/mcp-smoke-repository")
     asyncio.run(exercise(f"http://{address}", password))
-    print("Live Semaphore smoke test passed.", flush=True)
+    print(f"Live Semaphore smoke test passed: {args.image}", flush=True)
   finally:
     if container:
       docker("rm", "--force", "--volumes", container)
