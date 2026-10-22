@@ -8,6 +8,8 @@ minor releases may change interfaces; release notes will identify migration step
 
 ### Added
 
+- A hardened systemd service template and setup instructions for Linux hosts,
+  with the unit included in source distributions.
 - An opt-in core tool profile for common project and task workflows, while
   retaining the complete catalogue as the default.
 - Contributor guidance, issue and pull request templates, private security

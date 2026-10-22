@@ -1,0 +1,38 @@
+# Semaphore UI MCP server -- Streamable HTTP service unit.
+#
+# Follow the README's systemd setup instructions before enabling this unit:
+#   - create the semaphoreui-mcp system user and group
+#   - install into /opt/semaphoreui-mcp/venv with a system-wide uv executable
+#   - set UV_PYTHON_INSTALL_DIR=/opt/semaphoreui-mcp/uv during installation so
+#     the managed CPython is accessible to the service user
+#   - configure /etc/semaphoreui-mcp.env (root:semaphoreui-mcp, mode 0640)
+#
+# The EnvironmentFile holds SEMAPHORE_URL, SEMAPHORE_API_TOKEN (or username/password),
+# MCP_HTTP_TOKEN and any other settings from the README configuration table. Keep it
+# out of version control. Binding beyond loopback refuses to start without MCP_HTTP_TOKEN;
+# add the hostname clients use to MCP_ALLOWED_HOSTS (for example mcp.example.com:8443).
+[Unit]
+Description=Semaphore UI MCP server
+Documentation=https://github.com/johsem/semaphoreui-mcp#readme
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=semaphoreui-mcp
+Group=semaphoreui-mcp
+EnvironmentFile=/etc/semaphoreui-mcp.env
+ExecStart=/opt/semaphoreui-mcp/venv/bin/semaphoreui-mcp --transport streamable-http --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+
+# Hardening. The server writes no files at runtime (the venv and the uv-managed
+# Python under /opt/semaphoreui-mcp/uv only need read access while running).
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target
