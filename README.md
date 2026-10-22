@@ -296,6 +296,47 @@ docker run --rm -i --env-file .env semaphoreui-mcp --transport stdio
 Do not allocate a TTY (`-t`) for stdio MCP. The image's default command starts HTTP;
 the explicit `--transport stdio` argument overrides it.
 
+## systemd service
+
+To run the HTTP transport as a supervised service on a Linux host or container
+running systemd, install the package into a uv-managed virtual environment and use
+[`deploy/semaphoreui-mcp.service`](deploy/semaphoreui-mcp.service) as a template.
+Run these commands from a source checkout or extracted source distribution, with
+Git and uv installed. The example expects a system-wide uv executable at
+`/usr/local/bin/uv`; adjust that path if needed. A uv installation in your personal
+home directory may not be accessible to the service user.
+
+```sh
+sudo useradd --system --user-group --home /opt/semaphoreui-mcp --shell /usr/sbin/nologin semaphoreui-mcp
+sudo mkdir -p /opt/semaphoreui-mcp && sudo chown semaphoreui-mcp: /opt/semaphoreui-mcp
+sudo -u semaphoreui-mcp env UV_PYTHON_INSTALL_DIR=/opt/semaphoreui-mcp/uv sh -c '
+  /usr/local/bin/uv venv /opt/semaphoreui-mcp/venv --python 3.13 &&
+  /usr/local/bin/uv pip install --python /opt/semaphoreui-mcp/venv/bin/python \
+    "semaphoreui-mcp @ git+https://github.com/johsem/semaphoreui-mcp"'
+sudo install -o root -g semaphoreui-mcp -m 0640 .env.example /etc/semaphoreui-mcp.env
+sudoedit /etc/semaphoreui-mcp.env
+```
+
+Replace the placeholder Semaphore URL and credentials and set `MCP_HTTP_TOKEN`
+before starting the service. The unit loads this file via `EnvironmentFile` and
+runs with `NoNewPrivileges`/`ProtectSystem=strict`. Pin the package source to a
+commit (`...semaphoreui-mcp@<sha>`) when deploying a specific revision; dependency
+versions are still resolved from the package's allowed ranges.
+
+The template listens on `127.0.0.1:8000`. Adjust `--host`, `--port`,
+`MCP_ALLOWED_HOSTS`, and the paths for your environment before installing it:
+
+```sh
+sudo install -o root -g root -m 0644 deploy/semaphoreui-mcp.service /etc/systemd/system/semaphoreui-mcp.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now semaphoreui-mcp
+sudo systemctl status semaphoreui-mcp
+```
+
+Connect to `http://127.0.0.1:8000/mcp` with the configured bearer token. Follow the
+[HTTP configuration](#streamable-http) guidance when exposing it through a TLS
+reverse proxy. View service logs with `sudo journalctl -u semaphoreui-mcp`.
+
 ## Development and validation
 
 ```sh
