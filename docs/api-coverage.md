@@ -18,13 +18,16 @@ The following disposable Community images passed the integration smoke test on
 
 | Image tag | Result | Scope |
 | --- | --- | --- |
+| `v2.17.16` | Passed | Older release; core management and task workflow. |
 | `v2.18.31` | Passed | Older release; core management and task workflow. |
 | `v2.19.17` | Passed | Catalogue source release; core management and task workflow. |
 | `v2.20.16-beta1` | Passed | Prerelease; core management and task workflow. |
 
 The smoke test covers session login, API-token creation/use/revocation, project
 CRUD, access keys, repositories, inventories, environments, templates, schedules,
-a container-local Ansible task and its output, project backup, and cleanup. It
+a container-local Ansible task and its output, project backup, and cleanup. Task
+discovery and execution use the core tool profile with a project allowlist;
+fixture administration uses the full profile. It
 does not certify every advertised operation, Pro features, other releases, or
 future releases. The prerelease result is evidence for that exact build.
 [GitHub Actions](../.github/workflows/ci.yml) repeats this matrix on pushes and
@@ -41,6 +44,15 @@ Without `--image`, the script uses `semaphoreui/semaphore:v2.19.17`. Unsupported
 operations return errors independently; a missing newer route does not prevent
 other compatible tools from working. Report compatibility failures with the exact
 image/version, edition, affected tool, and sanitized request/error details.
+
+## Tool profiles
+
+The inventory below describes the full management catalogue. The optional `core`
+profile exposes everyday inspection and task operations; its explicit tool names
+are maintained in [`profiles.py`](../src/semaphoreui_mcp/profiles.py). Read-only
+mode and project restrictions apply to either profile. Excluded tools reject
+direct calls as well as being absent from discovery. Select and inspect profiles
+with the [README instructions](../README.md#choose-a-tool-profile).
 
 ## Included capabilities
 

@@ -16,6 +16,7 @@ from starlette.responses import JSONResponse
 from semaphoreui_mcp import __version__
 from semaphoreui_mcp.catalogue import load_catalogue
 from semaphoreui_mcp.config import Settings
+from semaphoreui_mcp.profiles import TOOL_PROFILES, normalize_tool_profile, tool_in_profile
 from semaphoreui_mcp.server import Application
 
 LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
@@ -93,16 +94,30 @@ def main():
   parser.add_argument("--host", default="127.0.0.1")
   parser.add_argument("--port", type=int, default=8000)
   parser.add_argument(
+    "--tool-profile",
+    choices=TOOL_PROFILES,
+    help="Select the full catalogue or core inspection/run tools; overrides SEMAPHORE_TOOL_PROFILE",
+  )
+  parser.add_argument(
     "--list-tools",
     action="store_true",
-    help="Print the bundled API tool catalogue as JSON without connecting",
+    help="Print the selected profile's bundled tool catalogue as JSON without connecting",
   )
   args = parser.parse_args()
   logging.basicConfig(level=logging.WARNING)
+  try:
+    profile = normalize_tool_profile(
+      args.tool_profile
+      if args.tool_profile is not None
+      else os.environ.get("SEMAPHORE_TOOL_PROFILE", "full")
+    )
+  except ValueError as exc:
+    parser.error(str(exc))
   if args.list_tools:
     tools = [
       {"name": op.name, "method": op.method, "path": op.path, "description": op.description}
       for op in load_catalogue().values()
+      if tool_in_profile(op.name, profile)
     ]
     tools.append(
       {"name": "wait_for_task", "description": "Poll task status with an optional output tail."}
@@ -112,7 +127,7 @@ def main():
   if not 1 <= args.port <= 65535:
     parser.error("--port must be between 1 and 65535")
   try:
-    application = Application(Settings.from_env())
+    application = Application(Settings.from_env({**os.environ, "SEMAPHORE_TOOL_PROFILE": profile}))
     if args.transport == "stdio":
       asyncio.run(run_stdio(application))
     else:

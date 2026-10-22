@@ -34,6 +34,7 @@ def test_safe_defaults():
   assert settings.timeout == 30
   assert settings.read_only is False
   assert settings.project_ids is None
+  assert settings.tool_profile == "full"
   assert "configured-api-token" not in repr(settings)
 
 
@@ -128,3 +129,17 @@ def test_environment_is_read_at_call_time(monkeypatch):
   monkeypatch.delenv("SEMAPHORE_USERNAME", raising=False)
   monkeypatch.delenv("SEMAPHORE_PASSWORD", raising=False)
   assert Settings.from_env().api_token == "test-api-token"
+
+
+@pytest.mark.parametrize("profile", ["core", " CORE ", "full"])
+def test_tool_profile_is_normalized(profile):
+  settings = Settings.from_env(environment(SEMAPHORE_TOOL_PROFILE=profile))
+  assert settings.tool_profile == profile.strip().lower()
+
+
+@pytest.mark.parametrize("profile", ["", "admin", "core,full"])
+def test_invalid_tool_profile_is_rejected(profile):
+  with pytest.raises(ValueError, match="SEMAPHORE_TOOL_PROFILE"):
+    Settings.from_env(environment(SEMAPHORE_TOOL_PROFILE=profile))
+  with pytest.raises(ValueError, match="SEMAPHORE_TOOL_PROFILE"):
+    Settings(url="https://semaphore.test", api_token="test-token", tool_profile=profile)

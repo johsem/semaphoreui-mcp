@@ -5,6 +5,8 @@ import os
 from dataclasses import dataclass, field
 from urllib.parse import unquote, urlsplit, urlunsplit
 
+from semaphoreui_mcp.profiles import normalize_tool_profile
+
 
 def normalize_api_url(value: str) -> str:
   """Keep reverse proxy prefixes while accepting either the UI or API URL."""
@@ -69,8 +71,10 @@ class Settings:
   timeout: float = 30.0
   read_only: bool = False
   project_ids: frozenset[int] | None = None
+  tool_profile: str = "full"
 
   def __post_init__(self) -> None:
+    object.__setattr__(self, "tool_profile", normalize_tool_profile(self.tool_profile))
     object.__setattr__(self, "url", normalize_api_url(self.url))
     if self.api_token and (self.username or self.password):
       raise ValueError(
@@ -122,4 +126,5 @@ class Settings:
       timeout=timeout,
       read_only=_boolean(values, "SEMAPHORE_READ_ONLY", False),
       project_ids=project_ids,
+      tool_profile=values.get("SEMAPHORE_TOOL_PROFILE", "full"),
     )
