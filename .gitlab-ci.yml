@@ -16,7 +16,7 @@ cache:
     - .uv-cache/
 
 before_script:
-  - python -m pip install --disable-pip-version-check uv==0.5.9
+  - python -m pip install --disable-pip-version-check uv==0.13.5
   - uv sync --locked --group dev
 
 verify:
