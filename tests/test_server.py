@@ -6,6 +6,7 @@ from mcp import types
 
 from semaphoreui_mcp.client import SemaphoreClient
 from semaphoreui_mcp.config import Settings
+from semaphoreui_mcp.profiles import CORE_TOOLS
 from semaphoreui_mcp.server import Application
 
 
@@ -268,3 +269,133 @@ async def test_qr_code_returns_native_mcp_image():
     assert base64.b64decode(result.content[0].data) == png
   finally:
     await app.client.aclose()
+
+
+@pytest.mark.asyncio
+async def test_core_profile_excludes_and_denies_every_non_core_tool():
+  requests = []
+  app = application(
+    lambda request: requests.append(request) or httpx.Response(200), tool_profile="core"
+  )
+  async with app.client:
+    names = {tool.name for tool in app.tools()}
+    assert names == CORE_TOOLS
+    assert CORE_TOOLS <= app.catalogue.keys() | {"wait_for_task"}
+    assert {
+      name for name in names if name != "wait_for_task" and not app.catalogue[name].read_only
+    } == {
+      "create_task",
+      "stop_task",
+    }
+    for name in app.catalogue.keys() - CORE_TOOLS:
+      result = await app.call_tool(name, {})
+      assert result.is_error
+      assert result.structured_content["error"]["code"] == "tool_disabled"
+    assert not requests
+    assert app.capabilities()["tool_profile"] == "core"
+
+
+@pytest.mark.asyncio
+async def test_full_profile_keeps_complete_catalogue():
+  app = application(lambda request: httpx.Response(200))
+  async with app.client:
+    assert {tool.name for tool in app.tools()} == app.catalogue.keys() | {"wait_for_task"}
+
+
+@pytest.mark.asyncio
+async def test_core_profile_composes_with_read_only_and_project_restrictions():
+  requests = []
+  app = application(
+    lambda request: requests.append(request) or httpx.Response(200, json=[{"id": 7}, {"id": 8}]),
+    tool_profile="core",
+    read_only=True,
+    project_ids=frozenset({7}),
+  )
+  async with app.client:
+    names = {tool.name for tool in app.tools()}
+    assert "create_task" not in names
+    assert "stop_task" not in names
+    for name in ("create_task", "stop_task"):
+      result = await app.call_tool(name, {})
+      assert result.structured_content["error"]["code"] == "read_only"
+    for name, arguments in {
+      "get_template": {"project_id": 8, "template_id": 2},
+      "wait_for_task": {"project_id": 8, "task_id": 4},
+    }.items():
+      result = await app.call_tool(name, arguments)
+      assert result.structured_content["error"]["code"] == "project_forbidden"
+    assert not requests
+    result = await app.call_tool("list_projects", {})
+    assert result.structured_content["data"] == [{"id": 7}]
+    with pytest.raises(ValueError, match="outside"):
+      await app.read_resource("semaphore://projects/8/tasks")
+    assert len(requests) == 1
+
+
+@pytest.mark.asyncio
+async def test_core_profile_preserves_all_resources_and_prompts():
+  app = application(
+    lambda request: httpx.Response(200, json={"path": request.url.path}), tool_profile="core"
+  )
+  async with app.client:
+    for collection, suffix in {
+      "project": "",
+      "templates": "/templates",
+      "tasks": "/tasks",
+      "inventory": "/inventory",
+      "repositories": "/repositories",
+      "environments": "/environment",
+      "schedules": "/schedules",
+      "tasks/4": "/tasks/4",
+    }.items():
+      result = await app.read_resource(f"semaphore://projects/7/{collection}")
+      assert json.loads(result.contents[0].text) == {"path": f"/api/project/7{suffix}"}
+    for prompt, identifier in {
+      "investigate_task": "task_id",
+      "plan_template_run": "template_id",
+    }.items():
+      result = await app.get_prompt(
+        None,
+        types.GetPromptRequestParams(name=prompt, arguments={"project_id": "7", identifier: "4"}),
+      )
+      assert "project 7" in result.messages[0].content.text
+
+
+@pytest.mark.asyncio
+async def test_core_profile_inspect_launch_cancel_and_read_logs():
+  requests = []
+
+  def respond(request):
+    requests.append(request)
+    match request.method, request.url.path:
+      case "GET", "/api/project/7/templates":
+        return httpx.Response(200, json=[{"id": 2, "name": "Deploy"}])
+      case "POST", "/api/project/7/tasks":
+        assert json.loads(request.content) == {"template_id": 2, "params": {"dry_run": True}}
+        return httpx.Response(201, json={"id": 4, "status": "waiting"})
+      case "POST", "/api/project/7/tasks/4/stop":
+        assert json.loads(request.content) == {}
+        return httpx.Response(204)
+      case "GET", "/api/project/7/tasks/4":
+        return httpx.Response(200, json={"id": 4, "status": "stopped"})
+      case "GET", "/api/project/7/tasks/4/output":
+        return httpx.Response(200, json=[{"output": "Cancelled"}])
+    raise AssertionError(f"Unexpected request: {request.method} {request.url.path}")
+
+  app = application(respond, tool_profile="core", project_ids=frozenset({7}))
+  async with app.client:
+    result = await app.call_tool("list_templates", {"project_id": 7})
+    template = result.structured_content["data"][0]
+    result = await app.call_tool(
+      "create_task",
+      {"project_id": 7, "body": {"template_id": template["id"], "params": {"dry_run": True}}},
+    )
+    task_id = result.structured_content["data"]["id"]
+    result = await app.call_tool("stop_task", {"project_id": 7, "task_id": task_id})
+    assert not result.is_error
+    result = await app.call_tool(
+      "wait_for_task", {"project_id": 7, "task_id": task_id, "include_output": True}
+    )
+    assert result.structured_content["data"]["finished"] is True
+    assert result.structured_content["data"]["output"] == [{"output": "Cancelled"}]
+    assert len(requests) == 5

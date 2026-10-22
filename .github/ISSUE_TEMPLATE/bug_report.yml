@@ -1,0 +1,72 @@
+name: Bug report
+description: Report an adapter, connection, or compatibility problem.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For vulnerabilities, use [private reporting](https://github.com/johsem/semaphoreui-mcp/security/advisories/new) instead of this public form.
+        Remove credentials, private URLs, personal data, sensitive variables, and task output from all examples and logs.
+  - type: input
+    id: adapter-version
+    attributes:
+      label: Adapter version or commit
+      description: Run semaphoreui-mcp --version; include the commit if running from a checkout.
+      placeholder: Version and installation method (uv, pip, source, or container)
+    validations:
+      required: true
+  - type: input
+    id: semaphore-version
+    attributes:
+      label: Semaphore version and edition
+      description: Include the exact release or image tag and Community or Pro edition.
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: MCP client and environment
+      description: Include the MCP client/version, operating system, and Python version if applicable.
+    validations:
+      required: true
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Transport
+      options:
+        - stdio
+        - Streamable HTTP
+        - Other or unsure
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the affected tool, sanitized arguments, relevant settings, and steps to reproduce. Mention the tool profile, read-only mode, or project restrictions if enabled.
+      placeholder: |
+        1. Configure ...
+        2. Call tool ... with arguments ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: Expected and actual behavior
+      description: Explain what should happen and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Sanitized error or logs
+      description: Include the error code/status and relevant messages. Review every line for secrets before submitting.
+      render: text
+  - type: checkboxes
+    id: redaction
+    attributes:
+      label: Public report check
+      options:
+        - label: I have removed credentials and sensitive data, and this is not a private vulnerability report.
+          required: true

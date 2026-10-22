@@ -7,6 +7,7 @@ Only a new container is modified. Its Ansible task targets localhost inside it.
 
 import argparse
 import asyncio
+import json
 import os
 import secrets
 import subprocess
@@ -61,6 +62,33 @@ async def wait_for_server(url: str) -> None:
         pass
       await asyncio.sleep(0.5)
   raise RuntimeError("Disposable Semaphore server did not become ready within 90 seconds")
+
+
+async def wait_for_task_output(
+  app: Application, project_id: int, task_id: int, *, timeout: float = 15
+) -> tuple[object, object]:
+  # Semaphore persists task status separately from its periodically flushed log batches.
+  deadline = time.monotonic() + timeout
+  pending = ["get_task_output", "get_task_raw_output"]
+  outputs = {}
+  try:
+    async with asyncio.timeout(timeout):
+      while pending:
+        for name in pending.copy():
+          if time.monotonic() >= deadline:
+            raise TimeoutError
+          output = await call(app, name, project_id=project_id, task_id=task_id)
+          if "semaphoreui-mcp-smoke-success" in json.dumps(output):
+            outputs[name] = output
+            pending.remove(name)
+        if pending:
+          await asyncio.sleep(min(0.25, max(0, deadline - time.monotonic())))
+  except TimeoutError:
+    raise RuntimeError(
+      f"Task completed but expected output did not appear within {timeout:g} seconds "
+      f"from {', '.join(pending)}"
+    ) from None
+  return outputs["get_task_output"], outputs["get_task_raw_output"]
 
 
 async def exercise(url: str, password: str) -> None:
@@ -136,30 +164,37 @@ async def exercise(url: str, password: str) -> None:
           },
         )
         await call(bearer, "get_schedule", **scoped, schedule_id=schedule["id"])
-        await call(bearer, "list_templates", **scoped)
-        task = await call(
-          bearer,
-          "create_task",
-          **scoped,
-          body={
-            "template_id": template["id"],
-            "params": {"skip_galaxy_install": True},
-          },
+        core = Application(
+          Settings(
+            url=url,
+            api_token=token["id"],
+            tool_profile="core",
+            project_ids=frozenset({project_id}),
+          )
         )
-        completed = await call(
-          bearer,
-          "wait_for_task",
-          **scoped,
-          task_id=task["id"],
-          timeout=90,
-          poll_interval=0.5,
-          include_output=True,
-        )
-        if completed["task"]["status"] != "success":
-          # This container contains only the fixtures above, never user credentials.
-          print(completed.get("output", []), flush=True)
-          raise RuntimeError("The container-local Ansible task did not finish successfully")
-        await call(bearer, "get_task_raw_output", **scoped, task_id=task["id"])
+        async with core.client:
+          await call(core, "list_templates", **scoped)
+          task = await call(core, "create_task", **scoped, body={"template_id": template["id"]})
+          completed = await call(
+            core,
+            "wait_for_task",
+            **scoped,
+            task_id=task["id"],
+            timeout=90,
+            poll_interval=0.5,
+            include_output=True,
+          )
+          if completed["task"]["status"] != "success":
+            # This container contains only the fixtures above, never user credentials.
+            print(completed.get("output", []), flush=True)
+            if not completed["finished"]:
+              await call(core, "stop_task", **scoped, task_id=task["id"], body={"force": True})
+              await call(core, "wait_for_task", **scoped, task_id=task["id"], timeout=30)
+            raise RuntimeError("The container-local Ansible task did not finish successfully")
+          output, raw_output = await wait_for_task_output(core, **scoped, task_id=task["id"])
+          assert "semaphoreui-mcp-smoke-success" in json.dumps(output)
+          assert "semaphoreui-mcp-smoke-success" in str(raw_output)
+          print("PASS core profile task workflow", flush=True)
         await call(bearer, "get_project_backup", **scoped)
         await call(bearer, "delete_schedule", **scoped, schedule_id=schedule["id"])
         await call(bearer, "delete_task", **scoped, task_id=task["id"])

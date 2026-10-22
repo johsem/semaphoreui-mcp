@@ -57,6 +57,10 @@ To install without uv, create a Python 3.13+ virtual environment and run
 `python -m pip install .` inside it. This resolves dependencies from the ranges in
 `pyproject.toml`; `uv sync --locked` uses the repository's exact dependency lock.
 
+For versioned wheels, PyPI packages, and prebuilt containers, see
+[installing a release](docs/installing.md). Use the channels listed in the chosen
+[GitHub release](https://github.com/johsem/semaphoreui-mcp/releases).
+
 ## Connect an MCP client
 
 Use this configuration in a client that supports the common `mcpServers` format,
@@ -77,6 +81,7 @@ replacing the absolute checkout path and credentials:
       "env": {
         "SEMAPHORE_URL": "https://semaphore.example.com",
         "SEMAPHORE_API_TOKEN": "your-api-token",
+        "SEMAPHORE_TOOL_PROFILE": "core",
         "SEMAPHORE_READ_ONLY": "true",
         "SEMAPHORE_PROJECT_IDS": "1,2"
       }
@@ -85,9 +90,10 @@ replacing the absolute checkout path and credentials:
 }
 ```
 
-This example starts with read-only access to projects 1 and 2. Remove the project
-allowlist to use the whole account's scope; set `SEMAPHORE_READ_ONLY=false` to
-enable changes and task launches. The MCP server cannot grant permissions beyond
+This example selects the core tool profile with read-only access to projects 1
+and 2. Remove the project allowlist to use the whole account's scope;
+set `SEMAPHORE_READ_ONLY=false` to enable task launches. Use the full profile for
+configuration changes. The MCP server cannot grant permissions beyond
 those of its Semaphore account.
 
 If uv is unavailable on the MCP client's executable search path, use its absolute
@@ -108,6 +114,7 @@ load `.env`; pass variables through your client, shell, or container configurati
 | `SEMAPHORE_VERIFY_TLS` | `true` | Validate Semaphore's HTTPS certificate. Disable only for a deliberately trusted development environment. |
 | `SEMAPHORE_CA_BUNDLE` | Unset | Path to a PEM CA bundle for a private certificate authority. |
 | `SEMAPHORE_TIMEOUT` | `30` | Upstream HTTP request timeout in seconds. |
+| `SEMAPHORE_TOOL_PROFILE` | `full` | `core` exposes everyday inspection and task tools; `full` exposes the management catalogue. |
 | `SEMAPHORE_READ_ONLY` | `false` | Disable management mutations and job execution. |
 | `SEMAPHORE_PROJECT_IDS` | Unset | Comma-separated positive project IDs. Restrict project access and block global administration. |
 | `MCP_HTTP_TOKEN` | Unset | Bearer token protecting Streamable HTTP. Required for non-loopback bindings, optional on loopback. |
@@ -128,6 +135,29 @@ Keep configuration files containing tokens private. Tool responses and task logs
 can contain sensitive values supplied by Semaphore, including variables or output
 from automation. Review what your MCP client stores and shares. Read-only mode
 prevents mutations; it does not sanitize all upstream data.
+
+## Choose a tool profile
+
+Use `SEMAPHORE_TOOL_PROFILE=core` for inspecting projects and template dependencies,
+running or stopping tasks, and reading their status and output. It keeps the tool
+list focused on everyday operations. Use `full` when you need configuration
+changes, user administration, or edition-specific management operations. The
+default remains `full` for existing configurations.
+
+The CLI option `--tool-profile core` or `--tool-profile full` overrides the
+environment variable. Inspect either profile without credentials or a connection:
+
+```sh
+uv run --frozen semaphoreui-mcp --list-tools --tool-profile core
+uv run --frozen semaphoreui-mcp --list-tools --tool-profile full
+```
+
+Offline listing shows the selected profile's catalogue. At runtime, read-only mode
+and the project allowlist further restrict available tools. Tools excluded by the
+profile cannot be called by name either. The core profile still allows task
+execution; combine it with `SEMAPHORE_READ_ONLY=true` for inspection-only access.
+Resources and prompts remain available under both profiles and retain the same
+access restrictions. Restart the server after changing its profile.
 
 ## Common workflows
 
@@ -175,6 +205,10 @@ Its `timeout` stops further polling. The initial status request and optional
 output fetch follow `SEMAPHORE_TIMEOUT` and the HTTP client's retry rules
 separately, so total elapsed time can exceed the polling timeout. The result
 includes the last task state, `finished`, and `timed_out`.
+
+The optional output is a snapshot. Semaphore can persist final log lines after
+the task reports completion; fetch task output again if those lines are not yet
+available.
 
 For task history, `list_recent_tasks` and `list_recent_template_tasks` accept
 `count` and a `before` task ID cursor. A template listing supports its advertised
@@ -278,6 +312,8 @@ They do not need live Semaphore credentials or execute real automation.
 package builds, and disposable-container compatibility tests on pushes, pull
 requests, and manual runs. Test reports and built distributions are saved as
 workflow artifacts. GitLab CI remains available for GitLab-hosted repositories.
+Python tests run on 3.13, 3.14, and 3.15. Weekly Dependabot pull requests cover
+Python dependencies, GitHub Actions, and Docker base images.
 
 An optional integration smoke test verifies the adapter against a disposable
 Semaphore Community container:
@@ -348,6 +384,12 @@ For code changes, use the development checks above and add regression coverage
 for changed behavior. API changes should include updated tool schemas, coverage
 documentation, and a smoke-test result for the affected Semaphore release when
 possible.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and
+[catalogue maintenance](docs/catalogue-maintenance.md) for API updates. Report
+vulnerabilities privately using [SECURITY.md](SECURITY.md). Maintainers can follow
+the [release guide](docs/releasing.md); user-facing changes are recorded in the
+[changelog](CHANGELOG.md).
 
 ## License
 

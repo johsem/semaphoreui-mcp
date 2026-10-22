@@ -18,13 +18,16 @@ The following disposable Community images passed the integration smoke test on
 
 | Image tag | Result | Scope |
 | --- | --- | --- |
+| `v2.17.16` | Passed | Older release; core management and task workflow. |
 | `v2.18.31` | Passed | Older release; core management and task workflow. |
 | `v2.19.17` | Passed | Catalogue source release; core management and task workflow. |
 | `v2.20.16-beta1` | Passed | Prerelease; core management and task workflow. |
 
 The smoke test covers session login, API-token creation/use/revocation, project
 CRUD, access keys, repositories, inventories, environments, templates, schedules,
-a container-local Ansible task and its output, project backup, and cleanup. It
+a container-local Ansible task and its output, project backup, and cleanup. Task
+discovery and execution use the core tool profile with a project allowlist;
+fixture administration uses the full profile. It
 does not certify every advertised operation, Pro features, other releases, or
 future releases. The prerelease result is evidence for that exact build.
 [GitHub Actions](../.github/workflows/ci.yml) repeats this matrix on pushes and
@@ -41,6 +44,15 @@ Without `--image`, the script uses `semaphoreui/semaphore:v2.19.17`. Unsupported
 operations return errors independently; a missing newer route does not prevent
 other compatible tools from working. Report compatibility failures with the exact
 image/version, edition, affected tool, and sanitized request/error details.
+
+## Tool profiles
+
+The inventory below describes the full management catalogue. The optional `core`
+profile exposes everyday inspection and task operations; its explicit tool names
+are maintained in [`profiles.py`](../src/semaphoreui_mcp/profiles.py). Read-only
+mode and project restrictions apply to either profile. Excluded tools reject
+direct calls as well as being absent from discovery. Select and inspect profiles
+with the [README instructions](../README.md#choose-a-tool-profile).
 
 ## Included capabilities
 
@@ -68,6 +80,11 @@ The source of required fields and conditional checks is the public Go models and
 `list_recent_tasks` and `list_recent_template_tasks` support `count` (1–200) and `before` (the last task ID from the previous page). MCP results contain the records rather than upstream HTTP headers; keep requesting pages with the last task ID until an empty page is returned. The legacy `limit` parameter is supported. `list_tasks` and `list_template_tasks` return at most 1000 tasks and do not accept offset pagination.
 
 `get_task_output` returns all persisted structured log entries. `get_task_raw_output` returns plain text with ANSI escapes removed. Neither output endpoint supports pagination in this release. Statistics accept `start`/`end` as `YYYY-MM-DD`, plus an optional user ID.
+
+Semaphore batches log persistence separately from task-status updates. Final log
+lines may therefore appear shortly after a terminal task status; the output
+returned by `wait_for_task` is a snapshot, not a guarantee that all lines have
+flushed. See the upstream [log writer](https://github.com/semaphoreui/semaphore/blob/v2.19.17/services/tasks/TaskPool.go).
 
 Only `success`, `error`, and `stopped` are terminal task statuses. `waiting_confirmation` requires a decision; `confirmed` and `rejected` are transitional states, alongside `waiting`, `starting`, `running`, and `stopping`. These semantics come from the upstream [task status implementation](https://github.com/semaphoreui/semaphore/blob/v2.19.17/pkg/task_logger/task_logger.go).
 

@@ -15,6 +15,7 @@ from semaphoreui_mcp import __version__
 from semaphoreui_mcp.catalogue import load_catalogue
 from semaphoreui_mcp.client import SemaphoreClient, SemaphoreError
 from semaphoreui_mcp.config import Settings
+from semaphoreui_mcp.profiles import tool_in_profile
 
 LOGGER = logging.getLogger(__name__)
 SAFE_GLOBAL_PATHS = {"/ping", "/info", "/apps", "/projects"}
@@ -80,6 +81,8 @@ class Application:
     self.validators["wait_for_task"] = Draft202012Validator(WAIT_SCHEMA)
 
   def _visible(self, op) -> bool:
+    if not tool_in_profile(op.name, self.settings.tool_profile):
+      return False
     if self.settings.read_only and not op.read_only:
       return False
     return (
@@ -149,6 +152,11 @@ class Application:
     if name != "wait_for_task" and op is None:
       raise SemaphoreError(
         "Unknown tool. Use tools/list to discover available operations.", code="unknown_tool"
+      )
+    if not tool_in_profile(name, self.settings.tool_profile):
+      raise SemaphoreError(
+        "This tool is disabled by SEMAPHORE_TOOL_PROFILE. Use the full profile to enable it.",
+        code="tool_disabled",
       )
     if op:
       self._check_policy(op, arguments)
@@ -244,6 +252,7 @@ class Application:
       "version": __version__,
       "upstream_version": "2.19.17",
       "tools": [tool.name for tool in self.tools()],
+      "tool_profile": self.settings.tool_profile,
       "read_only": self.settings.read_only,
       "project_ids": sorted(self.settings.project_ids)
       if self.settings.project_ids is not None

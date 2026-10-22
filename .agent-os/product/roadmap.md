@@ -20,13 +20,21 @@
 - [x] Parameterize the smoke-test image and run the compatibility matrix in GitHub Actions.
 - [x] Document source checkout and contribution/reporting steps; add package project URLs.
 
+## OSS adoption
+
+- [x] Optional core tool profile with full catalogue as the default and enforced call restrictions.
+- [x] Contributor instructions, issue forms, PR template, and private security reporting.
+- [x] Catalogue maintenance guide and changelog.
+- [x] Weekly dependency-update configuration and enabled security alerts/fixes.
+- [x] Python compatibility matrix and additional older Semaphore workflow coverage.
+- [x] Release automation for GitHub assets, multi-platform GHCR images, and PyPI Trusted Publishing.
+- [ ] Configure the PyPI account's Trusted Publisher and enable publishing.
+- [ ] Publish the first release and verify public package/container installation.
+
 ## Later candidates
 
 These are possible follow-ups, not initial-release commitments:
 
 - Expand compatibility coverage to more operations, releases, and editions.
-- Versioned Python/container releases and release notes.
-- Dedicated contribution guidance, issue forms, and a private vulnerability-reporting route.
-- Dependency update automation and documented catalogue maintenance.
 - Incremental catalogue updates as upstream routes and schemas change.
 - Per-user upstream authorization if a multi-tenant deployment is required.

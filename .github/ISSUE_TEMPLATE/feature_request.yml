@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest a workflow, API capability, or usability improvement.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the workflow and what the current adapter makes difficult.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the desired result. For API coverage, link public upstream documentation and specify the Semaphore version and edition.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: Explain any existing tools or approaches you have tried.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Include relevant client or transport constraints. Do not include credentials or sensitive configuration.
