@@ -206,6 +206,10 @@ output fetch follow `SEMAPHORE_TIMEOUT` and the HTTP client's retry rules
 separately, so total elapsed time can exceed the polling timeout. The result
 includes the last task state, `finished`, and `timed_out`.
 
+The optional output is a snapshot. Semaphore can persist final log lines after
+the task reports completion; fetch task output again if those lines are not yet
+available.
+
 For task history, `list_recent_tasks` and `list_recent_template_tasks` accept
 `count` and a `before` task ID cursor. A template listing supports its advertised
 sort/order/app filters; task output endpoints do not support pagination.

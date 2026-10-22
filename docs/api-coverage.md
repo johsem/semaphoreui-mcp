@@ -81,6 +81,11 @@ The source of required fields and conditional checks is the public Go models and
 
 `get_task_output` returns all persisted structured log entries. `get_task_raw_output` returns plain text with ANSI escapes removed. Neither output endpoint supports pagination in this release. Statistics accept `start`/`end` as `YYYY-MM-DD`, plus an optional user ID.
 
+Semaphore batches log persistence separately from task-status updates. Final log
+lines may therefore appear shortly after a terminal task status; the output
+returned by `wait_for_task` is a snapshot, not a guarantee that all lines have
+flushed. See the upstream [log writer](https://github.com/semaphoreui/semaphore/blob/v2.19.17/services/tasks/TaskPool.go).
+
 Only `success`, `error`, and `stopped` are terminal task statuses. `waiting_confirmation` requires a decision; `confirmed` and `rejected` are transitional states, alongside `waiting`, `starting`, `running`, and `stopping`. These semantics come from the upstream [task status implementation](https://github.com/semaphoreui/semaphore/blob/v2.19.17/pkg/task_logger/task_logger.go).
 
 One upstream quirk is preserved and documented: `GET /tasks/{task_id}` currently returns the global task pool. Use project-scoped `get_task` for an individual task.

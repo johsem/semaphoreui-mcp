@@ -64,6 +64,33 @@ async def wait_for_server(url: str) -> None:
   raise RuntimeError("Disposable Semaphore server did not become ready within 90 seconds")
 
 
+async def wait_for_task_output(
+  app: Application, project_id: int, task_id: int, *, timeout: float = 15
+) -> tuple[object, object]:
+  # Semaphore persists task status separately from its periodically flushed log batches.
+  deadline = time.monotonic() + timeout
+  pending = ["get_task_output", "get_task_raw_output"]
+  outputs = {}
+  try:
+    async with asyncio.timeout(timeout):
+      while pending:
+        for name in pending.copy():
+          if time.monotonic() >= deadline:
+            raise TimeoutError
+          output = await call(app, name, project_id=project_id, task_id=task_id)
+          if "semaphoreui-mcp-smoke-success" in json.dumps(output):
+            outputs[name] = output
+            pending.remove(name)
+        if pending:
+          await asyncio.sleep(min(0.25, max(0, deadline - time.monotonic())))
+  except TimeoutError:
+    raise RuntimeError(
+      f"Task completed but expected output did not appear within {timeout:g} seconds "
+      f"from {', '.join(pending)}"
+    ) from None
+  return outputs["get_task_output"], outputs["get_task_raw_output"]
+
+
 async def exercise(url: str, password: str) -> None:
   await wait_for_server(url)
   session = Application(Settings(url=url, username="smoke-admin", password=password))
@@ -164,9 +191,9 @@ async def exercise(url: str, password: str) -> None:
               await call(core, "stop_task", **scoped, task_id=task["id"], body={"force": True})
               await call(core, "wait_for_task", **scoped, task_id=task["id"], timeout=30)
             raise RuntimeError("The container-local Ansible task did not finish successfully")
-          assert "semaphoreui-mcp-smoke-success" in json.dumps(completed.get("output"))
-          output = await call(core, "get_task_raw_output", **scoped, task_id=task["id"])
-          assert "semaphoreui-mcp-smoke-success" in str(output)
+          output, raw_output = await wait_for_task_output(core, **scoped, task_id=task["id"])
+          assert "semaphoreui-mcp-smoke-success" in json.dumps(output)
+          assert "semaphoreui-mcp-smoke-success" in str(raw_output)
           print("PASS core profile task workflow", flush=True)
         await call(bearer, "get_project_backup", **scoped)
         await call(bearer, "delete_schedule", **scoped, schedule_id=schedule["id"])
