@@ -27,6 +27,11 @@ dependencies = [
   "uvicorn>=0.35,<1",
 ]
 
+[project.urls]
+Repository = "https://github.com/johsem/semaphoreui-mcp"
+Documentation = "https://github.com/johsem/semaphoreui-mcp#readme"
+Issues = "https://github.com/johsem/semaphoreui-mcp/issues"
+
 [project.scripts]
 semaphoreui-mcp = "semaphoreui_mcp.__main__:main"
 

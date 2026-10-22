@@ -1,11 +1,15 @@
 # Architecture decisions
 
-## 2026-10-22: Pin the upstream API baseline
+## 2026-10-22: Record the upstream API source
 
-Use Semaphore v2.19.17 as the source of truth. Combine its published API document
-with a reviewed management-route inventory because the document alone does not
-describe every router endpoint. Bundle the source and catalogue so startup and
-tool discovery work offline. Document explicit exclusions and edition boundaries.
+Use Semaphore v2.19.17 as the source for the bundled schemas. Combine its published
+API document with a reviewed management-route inventory because the document alone
+does not describe every router endpoint. Bundle the source and catalogue so
+startup and tool discovery work offline. Document explicit exclusions and edition
+boundaries.
+This source version is provenance, not a runtime restriction. Existing operations
+can work across releases that retain their API contracts; record live smoke-test
+results separately and do not promise universal backward or forward compatibility.
 
 ## 2026-10-22: Use named catalogue-driven tools
 

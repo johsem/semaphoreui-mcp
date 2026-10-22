@@ -5,11 +5,9 @@ A Python [Model Context Protocol](https://modelcontextprotocol.io/) server for
 manage project configuration, launch jobs, and troubleshoot task output through
 Semaphore's management API.
 
-The API catalogue is pinned to
-[Semaphore v2.19.17](https://github.com/semaphoreui/semaphore/tree/v2.19.17).
-It provides 212 named, schema-validated management API tools plus `wait_for_task`,
-including routes omitted from the upstream OpenAPI document. The server works over
-stdio or Streamable HTTP and uses the official Python MCP SDK.
+It provides named, schema-validated management API tools and a `wait_for_task`
+helper, including routes omitted from the upstream OpenAPI document. The server
+works over stdio or Streamable HTTP and uses the official Python MCP SDK.
 
 ## Capabilities
 
@@ -32,9 +30,12 @@ available to the configured account.
 
 ## Install and run
 
-Requires Python 3.13+ and [uv](https://docs.astral.sh/uv/).
+Requires Python 3.13+. [uv](https://docs.astral.sh/uv/) is the recommended installer;
+a pip installation is also supported below.
 
 ```sh
+git clone https://github.com/johsem/semaphoreui-mcp.git
+cd semaphoreui-mcp
 uv sync --locked
 export SEMAPHORE_URL="https://semaphore.example.com"
 export SEMAPHORE_API_TOKEN="your-api-token"
@@ -274,16 +275,19 @@ uv run --frozen python -m build
 Unit and protocol tests use controlled HTTP responses and local MCP sessions.
 They do not need live Semaphore credentials or execute real automation.
 [GitHub Actions](.github/workflows/ci.yml) runs lint, tests, catalogue discovery,
-and package builds on pushes, pull requests, and manual runs. Test reports and
-built distributions are saved as workflow artifacts. GitLab CI remains available
-for GitLab-hosted repositories.
+package builds, and disposable-container compatibility tests on pushes, pull
+requests, and manual runs. Test reports and built distributions are saved as
+workflow artifacts. GitLab CI remains available for GitLab-hosted repositories.
 
 An optional integration smoke test verifies the adapter against a disposable
-Semaphore v2.19.17 Community container:
+Semaphore Community container:
 
 ```sh
 uv run --frozen python scripts/smoke_test.py --docker
 ```
+
+Use `--image semaphoreui/semaphore:<tag>` to test another release. The default
+image and recorded results are listed in [API coverage](docs/api-coverage.md).
 
 It requires Docker and downloads the Semaphore image if needed. The script creates
 a unique container with temporary credentials and a random loopback port. It
@@ -294,21 +298,35 @@ Its Ansible task runs a debug-only playbook inside that container. The
 script removes its container and anonymous volumes afterwards; the downloaded
 image remains cached. It does not use your configured Semaphore instance.
 
-Initial validation completed this smoke test successfully. Deployment-specific
-permissions, SSO policy, external runner connectivity, and Pro-only routes still
-need validation against the intended deployment.
+The tested releases and scope are recorded in [API coverage](docs/api-coverage.md).
+Deployment-specific permissions, SSO policy, external runner connectivity, and
+Pro-only routes still need validation against the intended deployment.
 
 The catalogue is bundled with the package so discovery does not require network
-access or a running Semaphore server. When upgrading the supported Semaphore
-version, review upstream API and router changes, regenerate the catalogue, update
-the coverage reference, and run the test suite before deploying.
+access or a running Semaphore server. When adding or updating API coverage, review
+upstream API and router changes, update the bundled specification and
+`src/semaphoreui_mcp/data/overrides.json` as needed, update the coverage reference,
+and run the test suite and relevant smoke tests. Tool schemas are built from these
+files at startup; keep existing tool names stable.
 
 ## Compatibility and scope
 
-The supported API baseline is Semaphore v2.19.17, not a claim of compatibility
-with every older or newer release. The bundled OpenAPI source and applicable
-upstream license are included in package data. This is an independent integration
-with [the Semaphore project](https://github.com/semaphoreui/semaphore).
+The server does not require a particular Semaphore release or reject instances
+based on their version. Existing tools are expected to work with newer releases
+that preserve the API routes, request formats, and behavior they use. They can also
+work with older releases where those APIs are available. New upstream features
+may require a catalogue update before they are exposed as tools.
+
+Compatibility is per operation: older versions may lack routes or fields, and
+breaking API changes may require adapter updates. The catalogue does not
+automatically detect or hide operations missing from a particular installation.
+See [API coverage](docs/api-coverage.md) for tested versions, validation scope,
+and the source release used to build the bundled schemas. That source records API
+provenance, not a required server version.
+
+The bundled OpenAPI source and applicable upstream license are included in package
+data. This is an independent integration with
+[the Semaphore project](https://github.com/semaphoreui/semaphore).
 
 The MCP exposes management operations. Interactive login/SSO flows, WebSocket
 subscriptions, runner agent transport, incoming integration webhooks, the
@@ -316,6 +334,20 @@ Terraform backend protocol, and JWKS endpoints are outside that interface.
 Username/password session setup is handled internally by the HTTP client.
 Unsupported routes and account/edition limitations return errors from Semaphore;
 consult [API coverage](docs/api-coverage.md) for the precise boundary.
+
+## Help and contributions
+
+Bug reports and contributions are welcome through
+[GitHub issues](https://github.com/johsem/semaphoreui-mcp/issues) and pull requests.
+For a compatibility or connection problem, include the MCP server version,
+Semaphore version and edition, MCP client, transport, affected tool, and a minimal
+reproduction with sanitized error output. Remove tokens, passwords, private
+configuration, and sensitive task output before sharing.
+
+For code changes, use the development checks above and add regression coverage
+for changed behavior. API changes should include updated tool schemas, coverage
+documentation, and a smoke-test result for the affected Semaphore release when
+possible.
 
 ## License
 

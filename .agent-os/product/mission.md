@@ -5,9 +5,10 @@ management interface to Semaphore UI automation. Operators can inspect project
 configuration, administer resources, run tasks, and diagnose failures without
 translating each action into a raw HTTP request.
 
-The first release targets Semaphore v2.19.17. It serves a single configured
-Semaphore identity through local stdio or authenticated Streamable HTTP, and can
-restrict that identity further through read-only mode and a project allowlist.
+The server uses Semaphore's management API across compatible releases. It serves
+a single configured Semaphore identity through local stdio or authenticated
+Streamable HTTP, and can restrict that identity further through read-only mode and
+a project allowlist.
 
 Success means explicit API coverage, accurate tool schemas, useful errors, bounded
 network behavior, reproducible packaging, and validation that never requires

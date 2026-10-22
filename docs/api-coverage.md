@@ -1,8 +1,46 @@
 # Semaphore API coverage
 
-This server exposes **212 management operations** pinned to Semaphore UI **v2.19.17**. The bundled [upstream Swagger specification](https://github.com/semaphoreui/semaphore/blob/v2.19.17/api-docs.yml) supplies 121 management operations. An audit of the [release router](https://github.com/semaphoreui/semaphore/blob/v2.19.17/api/router.go), public Go handlers/models, and web UI adds 91 operations and corrects stale paths, parameters, and schemas in `data/overrides.json`.
+The management API catalogue is derived from the bundled [upstream Swagger specification](https://github.com/semaphoreui/semaphore/blob/v2.19.17/api-docs.yml) and an audit of the [release router](https://github.com/semaphoreui/semaphore/blob/v2.19.17/api/router.go), public Go handlers/models, and web UI. Additional operations and corrections to stale paths, parameters, and schemas are maintained in `src/semaphoreui_mcp/data/overrides.json`. Use `semaphoreui-mcp --list-tools` to inspect the installed catalogue.
 
-The Swagger document's internal `info.version` still says `2.16.14`; the vendored file is from the `v2.19.17` Git tag. Coverage describes registered routes and request construction. It does not certify every endpoint against a running installation or guarantee availability across older releases, editions, licenses, and user permissions.
+The Swagger document's internal `info.version` still says `2.16.14`; the vendored file is from the `v2.19.17` Git tag. This identifies the source of the schemas, not a required runtime version. The `upstream_version` field in `semaphore://capabilities` also identifies this source release, not the connected server's detected version. Coverage describes registered routes and request construction. It does not certify every endpoint against a running installation or guarantee availability across releases, editions, licenses, and user permissions.
+
+## Compatibility validation
+
+The adapter does not enforce a Semaphore version or fetch a new schema from the
+connected server. Existing operations can work on older and newer releases when
+their routes, request formats, and behavior remain compatible. New endpoints and
+strictly validated input fields can require a catalogue update even when upstream
+changes are additive. Tools are not automatically filtered by server version or
+edition.
+
+The following disposable Community images passed the integration smoke test on
+2026-10-22, using the same adapter and request payloads:
+
+| Image tag | Result | Scope |
+| --- | --- | --- |
+| `v2.18.31` | Passed | Older release; core management and task workflow. |
+| `v2.19.17` | Passed | Catalogue source release; core management and task workflow. |
+| `v2.20.16-beta1` | Passed | Prerelease; core management and task workflow. |
+
+The smoke test covers session login, API-token creation/use/revocation, project
+CRUD, access keys, repositories, inventories, environments, templates, schedules,
+a container-local Ansible task and its output, project backup, and cleanup. It
+does not certify every advertised operation, Pro features, other releases, or
+future releases. The prerelease result is evidence for that exact build.
+[GitHub Actions](../.github/workflows/ci.yml) repeats this matrix on pushes and
+pull requests; no production credentials are needed.
+
+Run a specific version locally with Docker:
+
+```sh
+uv run --frozen python scripts/smoke_test.py --docker \
+  --image semaphoreui/semaphore:v2.18.31
+```
+
+Without `--image`, the script uses `semaphoreui/semaphore:v2.19.17`. Unsupported
+operations return errors independently; a missing newer route does not prevent
+other compatible tools from working. Report compatibility failures with the exact
+image/version, edition, affected tool, and sanitized request/error details.
 
 ## Included capabilities
 
