@@ -1,0 +1,2589 @@
+{
+  "upstream_version": "v2.19.17",
+  "source": "https://github.com/semaphoreui/semaphore/blob/v2.19.17/api/router.go",
+  "names": {
+    "DELETE /apps/{app_id}": "delete_app",
+    "DELETE /cache": "clear_server_cache",
+    "DELETE /cluster/tasks": "clear_cluster_tasks",
+    "DELETE /project/{project_id}": "delete_project",
+    "DELETE /project/{project_id}/cache": "clear_project_cache",
+    "DELETE /project/{project_id}/environment/{environment_id}": "delete_environment",
+    "DELETE /project/{project_id}/integrations/aliases/{alias_id}": "delete_project_integration_alias",
+    "DELETE /project/{project_id}/integrations/{integration_id}": "delete_integration",
+    "DELETE /project/{project_id}/integrations/{integration_id}/aliases/{alias_id}": "delete_integration_alias",
+    "DELETE /project/{project_id}/integrations/{integration_id}/matchers/{matcher_id}": "delete_integration_matcher",
+    "DELETE /project/{project_id}/integrations/{integration_id}/values/{value_id}": "delete_integration_value",
+    "DELETE /project/{project_id}/inventory/{inventory_id}": "delete_inventory",
+    "DELETE /project/{project_id}/inventory/{inventory_id}/terraform/aliases/{alias_id}": "delete_terraform_alias",
+    "DELETE /project/{project_id}/inventory/{inventory_id}/terraform/states/{state_id}": "delete_terraform_state",
+    "DELETE /project/{project_id}/keys/{key_id}": "delete_access_key",
+    "DELETE /project/{project_id}/me": "leave_project",
+    "DELETE /project/{project_id}/repositories/{repository_id}": "delete_repository",
+    "DELETE /project/{project_id}/roles/{role_slug}": "delete_project_role",
+    "DELETE /project/{project_id}/runners/{runner_id}": "delete_project_runner",
+    "DELETE /project/{project_id}/runners/{runner_id}/cache": "clear_project_runner_cache",
+    "DELETE /project/{project_id}/schedules/{schedule_id}": "delete_schedule",
+    "DELETE /project/{project_id}/secret_storages/{storage_id}": "delete_secret_storage",
+    "DELETE /project/{project_id}/tasks/{task_id}": "delete_task",
+    "DELETE /project/{project_id}/templates/{template_id}": "delete_template",
+    "DELETE /project/{project_id}/templates/{template_id}/perms/{perm_id}": "delete_template_permission",
+    "DELETE /project/{project_id}/users/{user_id}": "delete_project_user",
+    "DELETE /project/{project_id}/views/{view_id}": "delete_view",
+    "DELETE /project/{project_id}/workflows/{workflow_id}": "delete_workflow",
+    "DELETE /roles/{role_slug}": "delete_global_role",
+    "DELETE /runners/{runner_id}": "delete_global_runner",
+    "DELETE /runners/{runner_id}/cache": "clear_global_runner_cache",
+    "DELETE /subscription": "delete_subscription",
+    "DELETE /tasks/{task_id}": "delete_global_task",
+    "DELETE /user/tokens/{token_id}": "delete_api_token",
+    "DELETE /users/{user_id}": "delete_user",
+    "DELETE /users/{user_id}/2fas/totp/{totp_id}": "disable_user_totp",
+    "GET /admin/info": "get_admin_info",
+    "GET /apps": "list_apps",
+    "GET /apps/{app_id}": "get_app",
+    "GET /cluster": "get_cluster_status",
+    "GET /cluster/tasks": "list_cluster_tasks",
+    "GET /events": "list_events",
+    "GET /events/last": "list_recent_events",
+    "GET /info": "get_system_info",
+    "GET /options": "get_server_options",
+    "GET /ping": "ping",
+    "GET /project/{project_id}": "get_project",
+    "GET /project/{project_id}/backup": "get_project_backup",
+    "GET /project/{project_id}/environment": "list_environments",
+    "GET /project/{project_id}/environment/{environment_id}": "get_environment",
+    "GET /project/{project_id}/environment/{environment_id}/refs": "get_environment_references",
+    "GET /project/{project_id}/events": "list_project_events",
+    "GET /project/{project_id}/events/last": "list_recent_project_events",
+    "GET /project/{project_id}/integrations": "list_integrations",
+    "GET /project/{project_id}/integrations/aliases": "list_project_integration_aliases",
+    "GET /project/{project_id}/integrations/{integration_id}": "get_integration",
+    "GET /project/{project_id}/integrations/{integration_id}/aliases": "list_integration_aliases",
+    "GET /project/{project_id}/integrations/{integration_id}/matchers": "list_integration_matchers",
+    "GET /project/{project_id}/integrations/{integration_id}/matchers/{matcher_id}": "get_integration_matcher",
+    "GET /project/{project_id}/integrations/{integration_id}/matchers/{matcher_id}/refs": "get_integration_matcher_references",
+    "GET /project/{project_id}/integrations/{integration_id}/refs": "get_integration_references",
+    "GET /project/{project_id}/integrations/{integration_id}/values": "list_integration_values",
+    "GET /project/{project_id}/integrations/{integration_id}/values/{value_id}": "get_integration_value",
+    "GET /project/{project_id}/integrations/{integration_id}/values/{value_id}/refs": "get_integration_value_references",
+    "GET /project/{project_id}/inventory": "list_inventories",
+    "GET /project/{project_id}/inventory/{inventory_id}": "get_inventory",
+    "GET /project/{project_id}/inventory/{inventory_id}/refs": "get_inventory_references",
+    "GET /project/{project_id}/inventory/{inventory_id}/terraform/aliases": "list_terraform_aliases",
+    "GET /project/{project_id}/inventory/{inventory_id}/terraform/aliases/{alias_id}": "get_terraform_alias",
+    "GET /project/{project_id}/inventory/{inventory_id}/terraform/states": "list_terraform_states",
+    "GET /project/{project_id}/inventory/{inventory_id}/terraform/states/latest": "get_latest_terraform_state",
+    "GET /project/{project_id}/inventory/{inventory_id}/terraform/states/{state_id}": "get_terraform_state",
+    "GET /project/{project_id}/keys": "list_access_keys",
+    "GET /project/{project_id}/keys/{key_id}": "get_access_key",
+    "GET /project/{project_id}/keys/{key_id}/refs": "get_access_key_references",
+    "GET /project/{project_id}/repositories": "list_repositories",
+    "GET /project/{project_id}/repositories/{repository_id}": "get_repository",
+    "GET /project/{project_id}/repositories/{repository_id}/branches": "list_repository_branches",
+    "GET /project/{project_id}/repositories/{repository_id}/playbooks": "list_repository_playbooks",
+    "GET /project/{project_id}/repositories/{repository_id}/refs": "get_repository_references",
+    "GET /project/{project_id}/role": "get_project_permissions",
+    "GET /project/{project_id}/roles": "list_project_roles",
+    "GET /project/{project_id}/roles/all": "list_available_project_roles",
+    "GET /project/{project_id}/roles/{role_slug}": "get_project_role",
+    "GET /project/{project_id}/runner_tags": "list_project_runner_tags",
+    "GET /project/{project_id}/runners": "list_project_runners",
+    "GET /project/{project_id}/runners/{runner_id}": "get_project_runner",
+    "GET /project/{project_id}/schedules": "list_schedules",
+    "GET /project/{project_id}/schedules/{schedule_id}": "get_schedule",
+    "GET /project/{project_id}/secret_storages": "list_secret_storages",
+    "GET /project/{project_id}/secret_storages/{storage_id}": "get_secret_storage",
+    "GET /project/{project_id}/secret_storages/{storage_id}/refs": "get_secret_storage_references",
+    "GET /project/{project_id}/stats": "get_project_task_stats",
+    "GET /project/{project_id}/tasks": "list_tasks",
+    "GET /project/{project_id}/tasks/last": "list_recent_tasks",
+    "GET /project/{project_id}/tasks/{task_id}": "get_task",
+    "GET /project/{project_id}/tasks/{task_id}/ansible/errors": "list_task_ansible_errors",
+    "GET /project/{project_id}/tasks/{task_id}/ansible/hosts": "list_task_ansible_hosts",
+    "GET /project/{project_id}/tasks/{task_id}/output": "get_task_output",
+    "GET /project/{project_id}/tasks/{task_id}/raw_output": "get_task_raw_output",
+    "GET /project/{project_id}/tasks/{task_id}/stages": "list_task_stages",
+    "GET /project/{project_id}/templates": "list_templates",
+    "GET /project/{project_id}/templates/{template_id}": "get_template",
+    "GET /project/{project_id}/templates/{template_id}/perms": "list_template_permissions",
+    "GET /project/{project_id}/templates/{template_id}/perms/{perm_id}": "get_template_permission",
+    "GET /project/{project_id}/templates/{template_id}/refs": "get_template_references",
+    "GET /project/{project_id}/templates/{template_id}/schedules": "list_template_schedules",
+    "GET /project/{project_id}/templates/{template_id}/stats": "get_template_task_stats",
+    "GET /project/{project_id}/templates/{template_id}/tasks": "list_template_tasks",
+    "GET /project/{project_id}/templates/{template_id}/tasks/last": "list_recent_template_tasks",
+    "GET /project/{project_id}/users": "list_project_users",
+    "GET /project/{project_id}/users/{user_id}": "get_project_user",
+    "GET /project/{project_id}/views": "list_views",
+    "GET /project/{project_id}/views/{view_id}": "get_view",
+    "GET /project/{project_id}/views/{view_id}/templates": "list_view_templates",
+    "GET /project/{project_id}/workflows": "list_workflows",
+    "GET /project/{project_id}/workflows/{workflow_id}": "get_workflow",
+    "GET /project/{project_id}/workflows/{workflow_id}/runs": "list_workflow_runs",
+    "GET /project/{project_id}/workflows/{workflow_id}/runs/{run_id}": "get_workflow_run",
+    "GET /project/{project_id}/workflows/{workflow_id}/runs/{run_id}/approvals": "list_workflow_run_approvals",
+    "GET /project/{project_id}/workflows/{workflow_id}/runs/{run_id}/artifacts": "get_workflow_run_artifacts",
+    "GET /projects": "list_projects",
+    "GET /roles": "list_global_roles",
+    "GET /roles/{role_slug}": "get_global_role",
+    "GET /runner_tags": "list_global_runner_tags",
+    "GET /runners": "list_global_runners",
+    "GET /runners/{runner_id}": "get_global_runner",
+    "GET /subscription": "get_subscription",
+    "GET /tasks": "list_global_tasks",
+    "GET /tasks/{task_id}": "get_global_task",
+    "GET /user": "get_current_user",
+    "GET /user/options": "get_user_options",
+    "GET /user/tokens": "list_api_tokens",
+    "GET /users": "list_users",
+    "GET /users/{user_id}": "get_user",
+    "GET /users/{user_id}/2fas/totp/{totp_id}/qr": "get_user_totp_qr",
+    "POST /apps/{app_id}/active": "set_app_active",
+    "POST /options": "set_server_option",
+    "POST /project/{project_id}/environment": "create_environment",
+    "POST /project/{project_id}/environment/{environment_id}/sync": "sync_environment",
+    "POST /project/{project_id}/integrations": "create_integration",
+    "POST /project/{project_id}/integrations/aliases": "create_project_integration_alias",
+    "POST /project/{project_id}/integrations/{integration_id}/aliases": "create_integration_alias",
+    "POST /project/{project_id}/integrations/{integration_id}/matchers": "create_integration_matcher",
+    "POST /project/{project_id}/integrations/{integration_id}/values": "create_integration_value",
+    "POST /project/{project_id}/inventory": "create_inventory",
+    "POST /project/{project_id}/inventory/{inventory_id}/terraform/aliases": "create_terraform_alias",
+    "POST /project/{project_id}/keys": "create_access_key",
+    "POST /project/{project_id}/notifications/test": "test_project_notification",
+    "POST /project/{project_id}/repositories": "create_repository",
+    "POST /project/{project_id}/roles": "create_project_role",
+    "POST /project/{project_id}/runners": "create_project_runner",
+    "POST /project/{project_id}/runners/{runner_id}/active": "set_project_runner_active",
+    "POST /project/{project_id}/runners/{runner_id}/registration-token": "regenerate_project_runner_registration_token",
+    "POST /project/{project_id}/schedules": "create_schedule",
+    "POST /project/{project_id}/schedules/validate": "validate_schedule",
+    "POST /project/{project_id}/secret_storages": "create_secret_storage",
+    "POST /project/{project_id}/secret_storages/{storage_id}/sync": "sync_secret_storage",
+    "POST /project/{project_id}/tasks": "create_task",
+    "POST /project/{project_id}/tasks/{task_id}/confirm": "confirm_task",
+    "POST /project/{project_id}/tasks/{task_id}/reject": "reject_task",
+    "POST /project/{project_id}/tasks/{task_id}/stop": "stop_task",
+    "POST /project/{project_id}/templates": "create_template",
+    "POST /project/{project_id}/templates/{template_id}/inventory/{inventory_id}/attach": "attach_template_inventory",
+    "POST /project/{project_id}/templates/{template_id}/inventory/{inventory_id}/detach": "detach_template_inventory",
+    "POST /project/{project_id}/templates/{template_id}/inventory/{inventory_id}/set_default": "set_template_default_inventory",
+    "POST /project/{project_id}/templates/{template_id}/perms": "create_template_permission",
+    "POST /project/{project_id}/templates/{template_id}/stop_all_tasks": "stop_template_tasks",
+    "POST /project/{project_id}/users": "create_project_user",
+    "POST /project/{project_id}/views": "create_view",
+    "POST /project/{project_id}/views/positions": "set_view_positions",
+    "POST /project/{project_id}/workflows": "create_workflow",
+    "POST /project/{project_id}/workflows/{workflow_id}/run": "run_workflow",
+    "POST /project/{project_id}/workflows/{workflow_id}/runs/{run_id}/approvals/{node_id}": "resolve_workflow_approval",
+    "POST /project/{project_id}/workflows/{workflow_id}/runs/{run_id}/stop": "stop_workflow_run",
+    "POST /projects": "create_project",
+    "POST /projects/restore": "restore_project",
+    "POST /roles": "create_global_role",
+    "POST /runners": "create_global_runner",
+    "POST /runners/{runner_id}/active": "set_global_runner_active",
+    "POST /runners/{runner_id}/registration-token": "regenerate_global_runner_registration_token",
+    "POST /subscription": "activate_subscription",
+    "POST /subscription/refresh": "refresh_subscription",
+    "POST /user/options": "set_user_option",
+    "POST /user/tokens": "create_api_token",
+    "POST /users": "create_user",
+    "POST /users/{user_id}/2fas/totp": "enable_user_totp",
+    "POST /users/{user_id}/password": "update_user_password",
+    "PUT /apps/{app_id}": "update_app",
+    "PUT /project/{project_id}": "update_project",
+    "PUT /project/{project_id}/environment/{environment_id}": "update_environment",
+    "PUT /project/{project_id}/integrations/{integration_id}": "update_integration",
+    "PUT /project/{project_id}/integrations/{integration_id}/matchers/{matcher_id}": "update_integration_matcher",
+    "PUT /project/{project_id}/integrations/{integration_id}/values/{value_id}": "update_integration_value",
+    "PUT /project/{project_id}/inventory/{inventory_id}": "update_inventory",
+    "PUT /project/{project_id}/inventory/{inventory_id}/terraform/aliases/{alias_id}": "update_terraform_alias",
+    "PUT /project/{project_id}/keys/{key_id}": "update_access_key",
+    "PUT /project/{project_id}/repositories/{repository_id}": "update_repository",
+    "PUT /project/{project_id}/roles/{role_slug}": "update_project_role",
+    "PUT /project/{project_id}/runners/{runner_id}": "update_project_runner",
+    "PUT /project/{project_id}/schedules/{schedule_id}": "update_schedule",
+    "PUT /project/{project_id}/schedules/{schedule_id}/active": "set_schedule_active",
+    "PUT /project/{project_id}/secret_storages/{storage_id}": "update_secret_storage",
+    "PUT /project/{project_id}/templates/{template_id}": "update_template",
+    "PUT /project/{project_id}/templates/{template_id}/description": "update_template_description",
+    "PUT /project/{project_id}/templates/{template_id}/perms/{perm_id}": "update_template_permission",
+    "PUT /project/{project_id}/users/{user_id}": "update_project_user",
+    "PUT /project/{project_id}/views/{view_id}": "update_view",
+    "PUT /project/{project_id}/workflows/{workflow_id}": "update_workflow",
+    "PUT /roles/{role_slug}": "update_global_role",
+    "PUT /runners/{runner_id}": "update_global_runner",
+    "PUT /users/{user_id}": "update_user"
+  },
+  "definition_patches": {
+    "TemplateRequest": {
+      "properties": {
+        "inventory_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "repository_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "environment_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "view_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "build_template_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "task_params": {
+          "type": "object",
+          "properties": {
+            "allow_debug": {
+              "type": "boolean"
+            },
+            "allow_override_inventory": {
+              "type": "boolean"
+            },
+            "allow_override_limit": {
+              "type": "boolean"
+            },
+            "allow_override_tags": {
+              "type": "boolean"
+            },
+            "allow_override_skip_tags": {
+              "type": "boolean"
+            },
+            "skip_galaxy_install": {
+              "type": "boolean"
+            },
+            "allow_override_skip_galaxy_install": {
+              "type": "boolean"
+            },
+            "allow_destroy": {
+              "type": "boolean"
+            },
+            "allow_auto_approve": {
+              "type": "boolean"
+            },
+            "auto_approve": {
+              "type": "boolean"
+            },
+            "override_backend": {
+              "type": "boolean"
+            },
+            "limit": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "skip_tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "backend_filename": {
+              "type": "string"
+            }
+          }
+        },
+        "vaults": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/TemplateVault"
+          }
+        },
+        "runner_tag": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Test",
+          "minLength": 1
+        },
+        "executor_image": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "allow_parallel_tasks": {
+          "type": "boolean"
+        },
+        "allow_override_branch_in_task": {
+          "type": "boolean"
+        },
+        "arguments": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "git_branch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "start_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "jwt_params": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "audience": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ttl": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "app": {
+                "const": "ansible"
+              }
+            },
+            "required": [
+              "app"
+            ]
+          },
+          "then": {
+            "required": [
+              "inventory_id"
+            ],
+            "properties": {
+              "inventory_id": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "not": {
+              "properties": {
+                "app": {
+                  "enum": [
+                    "terraform",
+                    "tofu",
+                    "terragrunt"
+                  ]
+                }
+              },
+              "required": [
+                "app"
+              ]
+            }
+          },
+          "then": {
+            "required": [
+              "playbook"
+            ],
+            "properties": {
+              "playbook": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InventoryRequest": {
+      "properties": {
+        "ssh_key_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "become_key_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "repository_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "static",
+            "static-yaml",
+            "file",
+            "terraform-workspace",
+            "tofu-workspace",
+            "terragrunt-workspace"
+          ]
+        },
+        "runner_tag": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "template_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "EnvironmentRequest": {
+      "properties": {
+        "secret_storage_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "sync_enabled": {
+          "type": "boolean"
+        },
+        "sync_interval": {
+          "type": "integer"
+        },
+        "sync_paths": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "name": {
+          "type": "string",
+          "example": "Test",
+          "minLength": 1
+        },
+        "env": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "secret_storage_key_prefix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "password": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ScheduleRequest": {
+      "properties": {
+        "task_params": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "environment": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "arguments": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "git_branch": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "inventory_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "debug": {
+                  "type": "boolean"
+                },
+                "dry_run": {
+                  "type": "boolean"
+                },
+                "diff": {
+                  "type": "boolean"
+                },
+                "skip_galaxy_install": {
+                  "type": "boolean"
+                },
+                "plan": {
+                  "type": "boolean"
+                },
+                "destroy": {
+                  "type": "boolean"
+                },
+                "auto_approve": {
+                  "type": "boolean"
+                },
+                "upgrade": {
+                  "type": "boolean"
+                },
+                "reconfigure": {
+                  "type": "boolean"
+                },
+                "debug_level": {
+                  "type": "integer"
+                },
+                "limit": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "skip_tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "run_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "delete_after_run": {
+          "type": "boolean"
+        },
+        "repository_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "RepositoryRequest": {
+      "properties": {
+        "ssh_key_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "example": "Test",
+          "minLength": 1
+        },
+        "git_url": {
+          "type": "string",
+          "example": "git@example.com",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name",
+        "git_url"
+      ]
+    },
+    "ProjectRequest": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Test",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "AccessKeyRequest": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "x-example": "None",
+          "example": "None",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "none",
+            "ssh",
+            "login_password",
+            "string"
+          ]
+        },
+        "string": {
+          "type": "string"
+        },
+        "source_storage_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "source_storage_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_storage_type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "vault",
+            "env",
+            "file",
+            null
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "",
+            "environment",
+            "variable",
+            "vault"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ]
+    },
+    "TemplateSurveyVar": {
+      "properties": {
+        "default_value": {
+          "type": "string"
+        }
+      }
+    },
+    "IntegrationRequest": {
+      "properties": {
+        "task_params": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "environment": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "arguments": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "git_branch": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "inventory_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "debug": {
+                  "type": "boolean"
+                },
+                "dry_run": {
+                  "type": "boolean"
+                },
+                "diff": {
+                  "type": "boolean"
+                },
+                "skip_galaxy_install": {
+                  "type": "boolean"
+                },
+                "plan": {
+                  "type": "boolean"
+                },
+                "destroy": {
+                  "type": "boolean"
+                },
+                "auto_approve": {
+                  "type": "boolean"
+                },
+                "upgrade": {
+                  "type": "boolean"
+                },
+                "reconfigure": {
+                  "type": "boolean"
+                },
+                "debug_level": {
+                  "type": "integer"
+                },
+                "limit": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "skip_tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "auth_secret_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "searchable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "TaskPrams": {
+      "properties": {
+        "environment": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "arguments": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "git_branch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "inventory_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "debug": {
+              "type": "boolean"
+            },
+            "dry_run": {
+              "type": "boolean"
+            },
+            "diff": {
+              "type": "boolean"
+            },
+            "skip_galaxy_install": {
+              "type": "boolean"
+            },
+            "plan": {
+              "type": "boolean"
+            },
+            "destroy": {
+              "type": "boolean"
+            },
+            "auto_approve": {
+              "type": "boolean"
+            },
+            "upgrade": {
+              "type": "boolean"
+            },
+            "reconfigure": {
+              "type": "boolean"
+            },
+            "debug_level": {
+              "type": "integer"
+            },
+            "limit": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "skip_tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RunnerRequest": {
+      "properties": {
+        "is_default": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "patches": {
+    "DELETE /project/{project_id}/workflows/{workflow_id}": {
+      "description": "Remove workflow. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "GET /project/{project_id}/inventory": {
+      "query": {
+        "app": {
+          "type": "string"
+        },
+        "template_id": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "GET /project/{project_id}/tasks": {
+      "query": {
+        "sort": {
+          "type": "string"
+        },
+        "order": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "description": "List up to 1000 project tasks. Use list_recent_tasks or list_recent_template_tasks for supported cursor pagination"
+    },
+    "GET /project/{project_id}/tasks/last": {
+      "query": {
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "before": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        }
+      },
+      "description": "List recent tasks, newest first. Use count and before (the last task id) for cursor pagination; the response X-Has-Next header indicates more pages"
+    },
+    "GET /project/{project_id}/tasks/{task_id}/output": {
+      "description": "Get every persisted task log line as structured output; upstream does not support output pagination"
+    },
+    "GET /project/{project_id}/tasks/{task_id}/raw_output": {
+      "description": "Get complete task logs as plain text with ANSI escape codes removed"
+    },
+    "GET /project/{project_id}/templates": {
+      "query": {
+        "app": {
+          "type": "string"
+        }
+      }
+    },
+    "GET /project/{project_id}/workflows": {
+      "description": "Get workflows. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "GET /project/{project_id}/workflows/{workflow_id}": {
+      "description": "Get workflow. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "GET /project/{project_id}/workflows/{workflow_id}/runs": {
+      "description": "Get workflow runs. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "GET /project/{project_id}/workflows/{workflow_id}/runs/{run_id}": {
+      "description": "Get workflow run details. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "GET /project/{project_id}/workflows/{workflow_id}/runs/{run_id}/approvals": {
+      "description": "Get workflow run approvals. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "GET /project/{project_id}/workflows/{workflow_id}/runs/{run_id}/artifacts": {
+      "description": "Get merged workflow run artifacts. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "POST /project/{project_id}/environment": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/integrations": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/integrations/{integration_id}/matchers": {
+      "body_path_fields": {
+        "integration_id": "integration_id"
+      }
+    },
+    "POST /project/{project_id}/integrations/{integration_id}/values": {
+      "body_path_fields": {
+        "integration_id": "integration_id"
+      }
+    },
+    "POST /project/{project_id}/inventory": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/keys": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/repositories": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/runners": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/schedules": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/tasks": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "template_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "params": {
+            "type": "object",
+            "properties": {
+              "debug": {
+                "type": "boolean"
+              },
+              "dry_run": {
+                "type": "boolean"
+              },
+              "diff": {
+                "type": "boolean"
+              },
+              "skip_galaxy_install": {
+                "type": "boolean"
+              },
+              "plan": {
+                "type": "boolean"
+              },
+              "destroy": {
+                "type": "boolean"
+              },
+              "auto_approve": {
+                "type": "boolean"
+              },
+              "upgrade": {
+                "type": "boolean"
+              },
+              "reconfigure": {
+                "type": "boolean"
+              },
+              "debug_level": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "skip_tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "inventory_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "build_task_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "playbook": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          },
+          "arguments": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "git_branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "string"
+          },
+          "commit_hash": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "template_id"
+        ],
+        "additionalProperties": false
+      },
+      "body_required": true,
+      "description": "Start an automation task. Ansible and Terraform switches belong in body.params; environment and arguments are JSON-encoded strings. This executes code on managed infrastructure"
+    },
+    "POST /project/{project_id}/tasks/{task_id}/stop": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "force": {
+            "type": "boolean"
+          }
+        }
+      },
+      "body_required": false,
+      "body_default": {}
+    },
+    "POST /project/{project_id}/templates": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/templates/{template_id}/stop_all_tasks": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "force": {
+            "type": "boolean"
+          }
+        }
+      },
+      "body_required": false,
+      "body_default": {}
+    },
+    "POST /project/{project_id}/users": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "body_required": true
+    },
+    "POST /project/{project_id}/views": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "POST /project/{project_id}/workflows": {
+      "description": "Add workflow. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "POST /project/{project_id}/workflows/{workflow_id}/run": {
+      "body": {
+        "type": "object",
+        "description": "Optional edition-specific workflow execution options."
+      },
+      "body_required": false,
+      "description": "Run workflow. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "POST /project/{project_id}/workflows/{workflow_id}/runs/{run_id}/approvals/{node_id}": {
+      "description": "Resolve workflow approval. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    "POST /user/tokens": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "body_required": false
+    },
+    "PUT /project/{project_id}": {
+      "body_path_fields": {
+        "id": "project_id"
+      }
+    },
+    "PUT /project/{project_id}/environment/{environment_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "environment_id"
+      }
+    },
+    "PUT /project/{project_id}/integrations/{integration_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "integration_id"
+      }
+    },
+    "PUT /project/{project_id}/integrations/{integration_id}/matchers/{matcher_id}": {
+      "body_path_fields": {
+        "integration_id": "integration_id",
+        "id": "matcher_id"
+      }
+    },
+    "PUT /project/{project_id}/integrations/{integration_id}/values/{value_id}": {
+      "body_path_fields": {
+        "integration_id": "integration_id",
+        "id": "value_id"
+      }
+    },
+    "PUT /project/{project_id}/inventory/{inventory_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "inventory_id"
+      }
+    },
+    "PUT /project/{project_id}/keys/{key_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "key_id"
+      }
+    },
+    "PUT /project/{project_id}/repositories/{repository_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "repository_id"
+      }
+    },
+    "PUT /project/{project_id}/runners/{runner_id}": {
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    "PUT /project/{project_id}/schedules/{schedule_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "schedule_id"
+      }
+    },
+    "PUT /project/{project_id}/templates/{template_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "template_id"
+      }
+    },
+    "PUT /project/{project_id}/users/{user_id}": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "body_required": true
+    },
+    "PUT /project/{project_id}/views/{view_id}": {
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "view_id"
+      }
+    },
+    "PUT /project/{project_id}/workflows/{workflow_id}": {
+      "description": "Update workflow. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    }
+  },
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/admin/info",
+      "summary": "get Admin Info",
+      "name": "get_admin_info"
+    },
+    {
+      "method": "DELETE",
+      "path": "/apps/{app_id}",
+      "summary": "delete App",
+      "name": "delete_app"
+    },
+    {
+      "method": "GET",
+      "path": "/apps/{app_id}",
+      "summary": "get App",
+      "name": "get_app"
+    },
+    {
+      "method": "PUT",
+      "path": "/apps/{app_id}",
+      "summary": "set App",
+      "name": "update_app",
+      "body": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "dark_color": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "body_required": true
+    },
+    {
+      "method": "POST",
+      "path": "/apps/{app_id}/active",
+      "summary": "set App Active",
+      "name": "set_app_active",
+      "body": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "active"
+        ]
+      },
+      "body_required": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/cache",
+      "summary": "clear Cache",
+      "name": "clear_server_cache"
+    },
+    {
+      "method": "GET",
+      "path": "/cluster",
+      "summary": "get Cluster Status",
+      "name": "get_cluster_status"
+    },
+    {
+      "method": "DELETE",
+      "path": "/cluster/tasks",
+      "summary": "clear Cluster Tasks",
+      "name": "clear_cluster_tasks",
+      "body": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "object",
+            "properties": {
+              "queue": {
+                "type": "boolean"
+              },
+              "running": {
+                "type": "boolean"
+              },
+              "active": {
+                "type": "boolean"
+              },
+              "aliases": {
+                "type": "boolean"
+              },
+              "claims": {
+                "type": "boolean"
+              },
+              "runtime_fields": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "required": [
+          "scope"
+        ]
+      },
+      "body_required": true
+    },
+    {
+      "method": "GET",
+      "path": "/cluster/tasks",
+      "summary": "get Cluster Tasks",
+      "name": "list_cluster_tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/options",
+      "summary": "get Options",
+      "name": "get_server_options"
+    },
+    {
+      "method": "POST",
+      "path": "/options",
+      "summary": "set Option",
+      "name": "set_server_option",
+      "body": {
+        "$ref": "#/definitions/Option"
+      },
+      "body_required": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/project/{project_id}/cache",
+      "summary": "Clear Cache",
+      "name": "clear_project_cache"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/environment/{environment_id}/refs",
+      "summary": "Get Environment Refs",
+      "name": "get_environment_references"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/environment/{environment_id}/sync",
+      "summary": "Sync Environment",
+      "name": "sync_environment"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/events/last",
+      "summary": "get Last Events",
+      "name": "list_recent_project_events"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/integrations/{integration_id}/matchers/{matcher_id}",
+      "summary": "Get Integration Matcher",
+      "name": "get_integration_matcher"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/integrations/{integration_id}/matchers/{matcher_id}/refs",
+      "summary": "Get Integration Matcher Refs",
+      "name": "get_integration_matcher_references"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/integrations/{integration_id}/refs",
+      "summary": "Get Integration Refs",
+      "name": "get_integration_references"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/integrations/{integration_id}/values/{value_id}",
+      "summary": "Get Integration Extract Value",
+      "name": "get_integration_value"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/integrations/{integration_id}/values/{value_id}/refs",
+      "summary": "Get Integration Extract Value Refs",
+      "name": "get_integration_value_references"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/inventory/{inventory_id}/refs",
+      "summary": "Get Inventory Refs",
+      "name": "get_inventory_references"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/aliases",
+      "summary": "Get Terraform Inventory Aliases",
+      "name": "list_terraform_aliases",
+      "description": "list terraform aliass. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/aliases",
+      "summary": "Add Terraform Inventory Alias",
+      "name": "create_terraform_alias",
+      "body": {
+        "type": "object",
+        "properties": {
+          "auth_key_id": {
+            "type": "integer"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "integer"
+          },
+          "inventory_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "auth_key_id"
+        ]
+      },
+      "body_required": true,
+      "description": "create terraform alias. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists",
+      "body_path_fields": {
+        "project_id": "project_id",
+        "inventory_id": "inventory_id"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/aliases/{alias_id}",
+      "summary": "Delete Terraform Inventory Alias",
+      "name": "delete_terraform_alias",
+      "description": "delete terraform alias. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/aliases/{alias_id}",
+      "summary": "Get Terraform Inventory Alias",
+      "name": "get_terraform_alias",
+      "description": "get terraform alias. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "PUT",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/aliases/{alias_id}",
+      "summary": "Set Terraform Inventory Alias Access Key",
+      "name": "update_terraform_alias",
+      "body": {
+        "type": "object",
+        "properties": {
+          "auth_key_id": {
+            "type": "integer"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "integer"
+          },
+          "inventory_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "auth_key_id"
+        ]
+      },
+      "body_required": true,
+      "description": "update terraform alias. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists",
+      "body_path_fields": {
+        "project_id": "project_id",
+        "inventory_id": "inventory_id"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/states",
+      "summary": "Get Terraform Inventory States",
+      "name": "list_terraform_states",
+      "description": "list terraform states. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/states/latest",
+      "summary": "Get Terraform Inventory Latest State",
+      "name": "get_latest_terraform_state",
+      "description": "get latest terraform state. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "DELETE",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/states/{state_id}",
+      "summary": "Delete Terraform Inventory State",
+      "name": "delete_terraform_state",
+      "description": "delete terraform state. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/inventory/{inventory_id}/terraform/states/{state_id}",
+      "summary": "Get Terraform Inventory State",
+      "name": "get_terraform_state",
+      "description": "get terraform state. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/keys/{key_id}",
+      "summary": "Get Keys",
+      "name": "get_access_key"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/keys/{key_id}/refs",
+      "summary": "Get Key Refs",
+      "name": "get_access_key_references"
+    },
+    {
+      "method": "DELETE",
+      "path": "/project/{project_id}/me",
+      "summary": "Left Project",
+      "name": "leave_project"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/repositories/{repository_id}/branches",
+      "summary": "Get Repository Branches",
+      "name": "list_repository_branches"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/repositories/{repository_id}/playbooks",
+      "summary": "Get Repository Playbooks",
+      "name": "list_repository_playbooks",
+      "query": {
+        "branch": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/repositories/{repository_id}/refs",
+      "summary": "Get Repository Refs",
+      "name": "get_repository_references"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/roles",
+      "summary": "Get Project Roles",
+      "name": "list_project_roles",
+      "description": "list project roles. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists",
+      "query": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "merge"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/roles",
+      "summary": "Add Project Role",
+      "name": "create_project_role",
+      "body": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "permissions": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "permissions"
+        ]
+      },
+      "body_required": true,
+      "description": "create project role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/roles/all",
+      "summary": "Get Project And Global Roles",
+      "name": "list_available_project_roles",
+      "description": "list available project roles. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "DELETE",
+      "path": "/project/{project_id}/roles/{role_slug}",
+      "summary": "Delete Project Role",
+      "name": "delete_project_role",
+      "description": "delete project role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/roles/{role_slug}",
+      "summary": "Get Project Role",
+      "name": "get_project_role",
+      "description": "get project role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "PUT",
+      "path": "/project/{project_id}/roles/{role_slug}",
+      "summary": "Update Project Role",
+      "name": "update_project_role",
+      "body": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "permissions": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "permissions"
+        ]
+      },
+      "body_required": true,
+      "description": "update project role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/schedules",
+      "summary": "Get Project Schedules",
+      "name": "list_schedules"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/schedules/validate",
+      "summary": "Validate Schedule Cron Format",
+      "name": "validate_schedule",
+      "body": {
+        "type": "object",
+        "properties": {
+          "cron_format": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "cron_format"
+        ]
+      },
+      "body_required": true,
+      "read_only": true
+    },
+    {
+      "method": "PUT",
+      "path": "/project/{project_id}/schedules/{schedule_id}/active",
+      "summary": "Set Schedule Active",
+      "name": "set_schedule_active",
+      "body": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "active"
+        ]
+      },
+      "body_required": true
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/secret_storages",
+      "summary": "Get Secret Storages",
+      "name": "list_secret_storages"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/secret_storages",
+      "summary": "Add",
+      "name": "create_secret_storage",
+      "body": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "local",
+              "vault",
+              "openbao",
+              "dvls",
+              "aws_sm",
+              "azure_kv"
+            ]
+          },
+          "params": {
+            "type": "object"
+          },
+          "readonly": {
+            "type": "boolean"
+          },
+          "sync_enabled": {
+            "type": "boolean"
+          },
+          "sync_interval": {
+            "type": "integer"
+          },
+          "sync_paths": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
+                },
+                "separator": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "source_storage_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "secret": {
+            "type": "string"
+          }
+        }
+      },
+      "body_required": true,
+      "body_path_fields": {
+        "project_id": "project_id"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/project/{project_id}/secret_storages/{storage_id}",
+      "summary": "Remove",
+      "name": "delete_secret_storage"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/secret_storages/{storage_id}",
+      "summary": "Get Secret Storage",
+      "name": "get_secret_storage"
+    },
+    {
+      "method": "PUT",
+      "path": "/project/{project_id}/secret_storages/{storage_id}",
+      "summary": "Update",
+      "name": "update_secret_storage",
+      "body": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "local",
+              "vault",
+              "openbao",
+              "dvls",
+              "aws_sm",
+              "azure_kv"
+            ]
+          },
+          "params": {
+            "type": "object"
+          },
+          "readonly": {
+            "type": "boolean"
+          },
+          "sync_enabled": {
+            "type": "boolean"
+          },
+          "sync_interval": {
+            "type": "integer"
+          },
+          "sync_paths": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
+                },
+                "separator": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "source_storage_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "secret": {
+            "type": "string"
+          }
+        }
+      },
+      "body_required": true,
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "storage_id"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/secret_storages/{storage_id}/refs",
+      "summary": "Get Refs",
+      "name": "get_secret_storage_references"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/secret_storages/{storage_id}/sync",
+      "summary": "Sync Secrets",
+      "name": "sync_secret_storage",
+      "body": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "local",
+              "vault",
+              "openbao",
+              "dvls",
+              "aws_sm",
+              "azure_kv"
+            ]
+          },
+          "params": {
+            "type": "object"
+          },
+          "readonly": {
+            "type": "boolean"
+          },
+          "sync_enabled": {
+            "type": "boolean"
+          },
+          "sync_interval": {
+            "type": "integer"
+          },
+          "sync_paths": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
+                },
+                "separator": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "source_storage_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "secret": {
+            "type": "string"
+          }
+        }
+      },
+      "body_required": true,
+      "body_path_fields": {
+        "project_id": "project_id",
+        "id": "storage_id"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/stats",
+      "summary": "Get Task Stats",
+      "name": "get_project_task_stats",
+      "query": {
+        "start": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Inclusive date in YYYY-MM-DD format."
+        },
+        "end": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Inclusive date in YYYY-MM-DD format."
+        },
+        "user_id": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/tasks/{task_id}/ansible/errors",
+      "summary": "Get Ansible Task Errors",
+      "name": "list_task_ansible_errors"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/tasks/{task_id}/ansible/hosts",
+      "summary": "Get Ansible Task Hosts",
+      "name": "list_task_ansible_hosts"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/tasks/{task_id}/confirm",
+      "summary": "Confirm Task",
+      "name": "confirm_task"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/tasks/{task_id}/reject",
+      "summary": "Reject Task",
+      "name": "reject_task"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/tasks/{task_id}/stages",
+      "summary": "Get Task Stages",
+      "name": "list_task_stages"
+    },
+    {
+      "method": "PUT",
+      "path": "/project/{project_id}/templates/{template_id}/description",
+      "summary": "Update Template Description",
+      "name": "update_template_description",
+      "body": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description"
+        ]
+      },
+      "body_required": true
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/templates/{template_id}/inventory/{inventory_id}/attach",
+      "summary": "Attach Inventory",
+      "name": "attach_template_inventory"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/templates/{template_id}/inventory/{inventory_id}/detach",
+      "summary": "Detach Inventory",
+      "name": "detach_template_inventory"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/templates/{template_id}/inventory/{inventory_id}/set_default",
+      "summary": "Set Template Inventory",
+      "name": "set_template_default_inventory"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/templates/{template_id}/perms",
+      "summary": "Get Template Perms",
+      "name": "list_template_permissions"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/templates/{template_id}/perms",
+      "summary": "Add Template Perm",
+      "name": "create_template_permission",
+      "body": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "integer"
+          },
+          "template_id": {
+            "type": "integer"
+          },
+          "role_slug": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "role_slug",
+          "permissions"
+        ]
+      },
+      "body_required": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/project/{project_id}/templates/{template_id}/perms/{perm_id}",
+      "summary": "Delete Template Perm",
+      "name": "delete_template_permission"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/templates/{template_id}/perms/{perm_id}",
+      "summary": "Get Template Perm",
+      "name": "get_template_permission"
+    },
+    {
+      "method": "PUT",
+      "path": "/project/{project_id}/templates/{template_id}/perms/{perm_id}",
+      "summary": "Update Template Perm",
+      "name": "update_template_permission",
+      "body": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "integer"
+          },
+          "template_id": {
+            "type": "integer"
+          },
+          "role_slug": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "role_slug",
+          "permissions"
+        ]
+      },
+      "body_required": true
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/templates/{template_id}/refs",
+      "summary": "Get Template Refs",
+      "name": "get_template_references"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/templates/{template_id}/schedules",
+      "summary": "Get Template Schedules",
+      "name": "list_template_schedules"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/templates/{template_id}/stats",
+      "summary": "Get Task Stats",
+      "name": "get_template_task_stats",
+      "query": {
+        "start": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Inclusive date in YYYY-MM-DD format."
+        },
+        "end": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Inclusive date in YYYY-MM-DD format."
+        },
+        "user_id": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/templates/{template_id}/tasks",
+      "summary": "Get All Tasks",
+      "name": "list_template_tasks",
+      "query": {
+        "sort": {
+          "type": "string"
+        },
+        "order": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "description": "List up to 1000 project tasks. Use list_recent_tasks or list_recent_template_tasks for supported cursor pagination"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/templates/{template_id}/tasks/last",
+      "summary": "Get Last Tasks",
+      "name": "list_recent_template_tasks",
+      "query": {
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "before": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        }
+      },
+      "description": "List recent tasks, newest first. Use count and before (the last task id) for cursor pagination; the response X-Has-Next header indicates more pages"
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/users/{user_id}",
+      "summary": "Get Users",
+      "name": "get_project_user"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/views/positions",
+      "summary": "Set View Positions",
+      "name": "set_view_positions",
+      "body": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "integer"
+        },
+        "description": "Map numeric view IDs (JSON object keys) to integer positions."
+      },
+      "body_required": true
+    },
+    {
+      "method": "GET",
+      "path": "/project/{project_id}/views/{view_id}/templates",
+      "summary": "Get View Templates",
+      "name": "list_view_templates"
+    },
+    {
+      "method": "POST",
+      "path": "/project/{project_id}/workflows/{workflow_id}/runs/{run_id}/stop",
+      "summary": "Stop Workflow Run",
+      "name": "stop_workflow_run",
+      "body": {
+        "type": "object",
+        "description": "Optional edition-specific workflow execution options."
+      },
+      "body_required": false,
+      "description": "stop workflow run. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/roles",
+      "summary": "Get Roles",
+      "name": "list_global_roles",
+      "description": "list global roles. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "summary": "Add Role",
+      "name": "create_global_role",
+      "body": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "permissions": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "permissions"
+        ]
+      },
+      "body_required": true,
+      "description": "create global role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "DELETE",
+      "path": "/roles/{role_slug}",
+      "summary": "Delete Role",
+      "name": "delete_global_role",
+      "description": "delete global role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/roles/{role_slug}",
+      "summary": "Get Global Role",
+      "name": "get_global_role",
+      "description": "get global role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "PUT",
+      "path": "/roles/{role_slug}",
+      "summary": "Update Role",
+      "name": "update_global_role",
+      "body": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "permissions": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "permissions"
+        ]
+      },
+      "body_required": true,
+      "description": "update global role. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "DELETE",
+      "path": "/subscription",
+      "summary": "Delete",
+      "name": "delete_subscription",
+      "description": "delete subscription. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/subscription",
+      "summary": "Get Subscription",
+      "name": "get_subscription",
+      "description": "get subscription. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "POST",
+      "path": "/subscription",
+      "summary": "Activate",
+      "name": "activate_subscription",
+      "body": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "key"
+        ]
+      },
+      "body_required": true,
+      "description": "activate subscription. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "POST",
+      "path": "/subscription/refresh",
+      "summary": "Refresh",
+      "name": "refresh_subscription",
+      "description": "refresh subscription. Availability depends on Semaphore edition, license, and permissions; some Community routes return 404 or empty lists"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks",
+      "summary": "Get Tasks",
+      "name": "list_global_tasks"
+    },
+    {
+      "method": "DELETE",
+      "path": "/tasks/{task_id}",
+      "summary": "Delete Task",
+      "name": "delete_global_task",
+      "description": "Stop or remove a task from the global running/queued task pool (administrator only)"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/{task_id}",
+      "summary": "Get Tasks",
+      "name": "get_global_task",
+      "description": "Inspect the global task pool. Upstream v2.19.17 returns the full pool even for this task-specific route; use get_task for a single project task"
+    },
+    {
+      "method": "POST",
+      "path": "/users/{user_id}/2fas/totp",
+      "summary": "Enable Totp",
+      "name": "enable_user_totp"
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/{user_id}/2fas/totp/{totp_id}",
+      "summary": "Disable Totp",
+      "name": "disable_user_totp"
+    },
+    {
+      "method": "GET",
+      "path": "/users/{user_id}/2fas/totp/{totp_id}/qr",
+      "summary": "Totp Qr",
+      "name": "get_user_totp_qr"
+    }
+  ]
+}

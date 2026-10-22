@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        run: python -m pip install --disable-pip-version-check uv==0.5.9
+
+      - name: Install locked dependencies
+        run: uv sync --locked --group dev
+
+      - name: Check lint
+        run: uv run --frozen ruff check .
+
+      - name: Check formatting
+        run: uv run --frozen ruff format --check .
+
+      - name: Run tests with coverage
+        run: >-
+          uv run --frozen pytest --cov=semaphoreui_mcp
+          --cov-report=term-missing --cov-report=xml --junitxml=junit.xml
+
+      - name: Verify offline tool discovery
+        env:
+          UV_OFFLINE: "true"
+        run: uv run --frozen semaphoreui-mcp --list-tools
+
+      - name: Build wheel and source distribution
+        run: uv run --frozen python -m build
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-reports
+          path: |
+            junit.xml
+            coverage.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload Python distributions
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: python-distributions
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14

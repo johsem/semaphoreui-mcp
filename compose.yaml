@@ -1,0 +1,18 @@
+services:
+  semaphoreui-mcp:
+    build: .
+    init: true
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MCP_HTTP_TOKEN: "${MCP_HTTP_TOKEN:?Set MCP_HTTP_TOKEN in .env before starting HTTP}"
+    ports:
+      - "127.0.0.1:8000:8000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

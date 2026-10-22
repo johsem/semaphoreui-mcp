@@ -1,0 +1,8 @@
+include README.md LICENSE pyproject.toml uv.lock .python-version
+include Dockerfile compose.yaml .dockerignore .env.example .gitlab-ci.yml
+recursive-include src/semaphoreui_mcp/data *
+recursive-include docs *.md
+recursive-include scripts *.py
+recursive-include tests *.py
+recursive-include .github/workflows *.yml
+global-exclude __pycache__ *.py[cod]
