@@ -75,7 +75,9 @@ relevant issue and mention any checks you could not run. Keep unrelated refactor
 and dependency updates separate so reviewers can assess the change.
 
 GitHub Actions runs lint, formatting, tests, packaging checks, and the compatibility
-matrix. Fix failing checks before requesting a merge. Maintainers manage tagged
+matrix. It also builds the adapter Docker image and verifies both tool profiles
+with networking disabled and a read-only container filesystem.
+Fix failing checks before requesting a merge. Maintainers manage tagged
 releases using the [release guide](docs/releasing.md).
 
 Contributions are distributed under this repository's [MIT license](LICENSE).
