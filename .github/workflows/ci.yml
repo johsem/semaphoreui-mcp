@@ -119,3 +119,48 @@ jobs:
         env:
           SEMAPHORE_TEST_IMAGE: semaphoreui/semaphore:${{ matrix.semaphore }}
         run: uv run --frozen python scripts/smoke_test.py --docker --image "$SEMAPHORE_TEST_IMAGE"
+
+  container:
+    name: Docker image build and offline smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13"
+
+      - name: Build adapter image
+        run: docker build --tag semaphoreui-mcp:ci .
+
+      - name: Check packaged CLI and both tool profiles offline
+        run: |
+          docker run --rm --network none --read-only --cap-drop ALL \
+            --security-opt no-new-privileges semaphoreui-mcp:ci --version
+          for profile in full core; do
+            docker run --rm --network none --read-only --cap-drop ALL \
+              --security-opt no-new-privileges semaphoreui-mcp:ci \
+              --tool-profile "$profile" --list-tools > "$RUNNER_TEMP/semaphore-$profile.json"
+          done
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          temporary = Path(os.environ["RUNNER_TEMP"])
+          names = {
+            profile: {tool["name"] for tool in json.loads(
+              (temporary / f"semaphore-{profile}.json").read_text()
+            )}
+            for profile in ("full", "core")
+          }
+          assert {"list_projects", "wait_for_task"} <= names["core"]
+          assert names["core"] < names["full"]
+          print(f"Image discovery: {len(names['full'])} full tools, {len(names['core'])} core tools")
+          PY
