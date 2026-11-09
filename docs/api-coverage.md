@@ -45,6 +45,29 @@ operations return errors independently; a missing newer route does not prevent
 other compatible tools from working. Report compatibility failures with the exact
 image/version, edition, affected tool, and sanitized request/error details.
 
+### Semaphore v2.19.18 source review
+
+The [v2.19.18 stable release](https://github.com/semaphoreui/semaphore/releases/tag/v2.19.18)
+adds `SEMAPHORE_SESSION_INACTIVITY_HOURS` to configure login-session expiry. The
+[default remains seven days](https://github.com/semaphoreui/semaphore/blob/v2.19.18/util/config_auth.go).
+The [source diff from v2.19.17](https://github.com/semaphoreui/semaphore/compare/v2.19.17...v2.19.18)
+changes session-expiry checks and server configuration; it does not change the
+Swagger document, management routes, or request/response models. The bundled
+catalogue therefore retains its v2.19.17 source provenance.
+
+The adapter already refreshes an expired username/password session once after a
+GET returns HTTP 401, including when concurrent reads share the expired session.
+It does not automatically retry writes or refresh a configured API token. These
+behaviors are covered by the client regression tests; no client change is needed
+for the configurable inactivity period.
+
+Live validation of v2.19.18 is pending: on 2026-11-09, Docker Hub had no
+`semaphoreui/semaphore:v2.19.18` tag and `docker pull` returned `manifest unknown`.
+The release's source review and mocked authentication tests are not a live
+compatibility result. CI and the smoke-test default continue using the validated
+images above. Add the exact stable tag to the compatibility matrix and record
+its smoke-test result when the upstream image becomes available.
+
 ## Tool profiles
 
 The inventory below describes the full management catalogue. The optional `core`
