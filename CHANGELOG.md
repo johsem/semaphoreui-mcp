@@ -20,6 +20,8 @@ minor releases may change interfaces; release notes will identify migration step
 
 ### Changed
 
+- Documented Semaphore v2.19.18's configurable login-session inactivity timeout
+  and the pending live validation while its Community image is unavailable.
 - Clarified that the bundled Semaphore schema source version is provenance, not a
   runtime version restriction; removed fixed tool counts from user-facing copy.
 - Added live compatibility checks against older, catalogue-source and prerelease
