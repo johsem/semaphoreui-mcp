@@ -22,6 +22,8 @@ minor releases may change interfaces; release notes will identify migration step
 
 - Require OpenTelemetry API 1.45.2 or newer for the trace-context parsing
   security fix in package installs as well as locked environments.
+- Added live Community smoke coverage for Semaphore v2.20.23 and documented
+  the workflow route change outside that test.
 - Documented Semaphore v2.19.18's configurable login-session inactivity timeout
   and the pending live validation while its Community image is unavailable.
 - Clarified that the bundled Semaphore schema source version is provenance, not a
