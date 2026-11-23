@@ -45,6 +45,27 @@ operations return errors independently; a missing newer route does not prevent
 other compatible tools from working. Report compatibility failures with the exact
 image/version, edition, affected tool, and sanitized request/error details.
 
+### Semaphore v2.20.23 compatibility
+
+The disposable Community smoke test passed against
+[`semaphoreui/semaphore:v2.20.23`](https://github.com/semaphoreui/semaphore/releases/tag/v2.20.23)
+on 2026-11-16. It covered the authentication and core management workflow
+described above, including a local Ansible task and its output. CI also runs
+this image alongside the earlier compatibility cases.
+
+The [v2.20.23 Swagger document](https://github.com/semaphoreui/semaphore/blob/v2.20.23/api-docs.yml)
+and [router](https://github.com/semaphoreui/semaphore/blob/v2.20.23/api/router.go)
+show changes outside the smoke test. For example, the workflow run endpoint
+moved from `POST .../workflows/{workflow_id}/run` to
+`POST .../workflows/{workflow_id}/runs`. The existing `run_workflow` tool
+continues to use the v2.19.17 route. Workflow execution and newer role and
+permission operations need a separate edition-specific compatibility review.
+
+Two upstream advisories list v2.19.18 as affected by project authorization
+issues in [vault bindings](https://github.com/semaphoreui/semaphore/security/advisories/GHSA-ffp6-w57q-758q)
+and [repository creation](https://github.com/semaphoreui/semaphore/security/advisories/GHSA-q9cq-8j9q-r93m).
+Use a patched Semaphore release if you run v2.19.18.
+
 ### Semaphore v2.19.18 source review
 
 The [v2.19.18 stable release](https://github.com/semaphoreui/semaphore/releases/tag/v2.19.18)
@@ -61,12 +82,9 @@ It does not automatically retry writes or refresh a configured API token. These
 behaviors are covered by the client regression tests; no client change is needed
 for the configurable inactivity period.
 
-Live validation of v2.19.18 is pending: on 2026-11-09, Docker Hub had no
-`semaphoreui/semaphore:v2.19.18` tag and `docker pull` returned `manifest unknown`.
-The release's source review and mocked authentication tests are not a live
-compatibility result. CI and the smoke-test default continue using the validated
-images above. Add the exact stable tag to the compatibility matrix and record
-its smoke-test result when the upstream image becomes available.
+Docker Hub still had no `semaphoreui/semaphore:v2.19.18` tag on 2026-11-16.
+The v2.19.18 review covers source and mocked authentication tests. The
+current stable Community release is exercised separately as described above.
 
 ## Tool profiles
 
