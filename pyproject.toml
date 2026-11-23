@@ -20,6 +20,7 @@ classifiers = [
 ]
 dependencies = [
   "mcp>=2.3,<3",
+  "opentelemetry-api>=1.45.2",  # MCP trace context parsing fix (GHSA-mf5v-w3w3-f6cg)
   "httpx>=0.28,<1",
   "PyYAML>=6,<7",
   "jsonschema>=4.23,<5",
