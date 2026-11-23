@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:0.13.7 AS uv
 
-FROM python:3.13-slim
+FROM python:3.15-slim
 
 LABEL org.opencontainers.image.source="https://github.com/johsem/semaphoreui-mcp" \
     org.opencontainers.image.description="Model Context Protocol server for Semaphore UI" \
